@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from .models import Book
+from .models import Sheet
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -25,3 +25,134 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+@login_required(login_url='login')
+def add_sheet(request):
+    if request.method == "POST":
+        try:
+            #Extract form data
+            new_sheet = Sheet(
+                title=request.POST["title"],
+                composer=request.POST["composer"],
+                arranger=request.POST.get("arranger", ""),
+                genre=request.POST.get("genre", ""),
+                difficulty_level=request.POST.get("difficulty_level", ""),
+                publication_year=request.POST.get("publication_year"),
+                publisher=request.POST.get("publisher", ""),
+                isbn=request.POST.get("isbn", ""),
+                description=request.POST.get("description", ""),
+                created_by=request.user,
+                modified_by=request.user,
+                sheet_file=request.FILES["sheet_file"]
+            )
+            
+            #Handle optional fields
+            if not new_sheet.arranger:
+                new_sheet.arranger = None
+            if not new_sheet.genre:
+                new_sheet.genre = None
+            if not new_sheet.difficulty_level:
+                new_sheet.difficulty_level = None
+            if not new_sheet.publication_year:
+                new_sheet.publication_year = None
+            if not new_sheet.publisher:
+                new_sheet.publisher = None
+            if not new_sheet.isbn:
+                new_sheet.isbn = None
+            if not new_sheet.description:
+                new_sheet.description = None
+            
+            #Save the book using in-built save method
+            new_sheet.save()
+            
+            messages.success(request, f"Successfully added '{new_sheet.title}'")
+            
+            #Return back to home page
+            return redirect('index')
+        #Error handling    
+        except Exception as e:
+            messages.error(request, f"Error adding book: {str(e)}")
+            return render(request, "add_sheet.html", {
+                "genre_choices": Sheet.GENRE_CHOICES,
+                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+            })
+    
+    # If GET request, just show the form
+    return render(request, "add_sheet.html", {
+                "genre_choices": Sheet.GENRE_CHOICES,
+                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+            })
+
+@login_required(login_url='login')
+def delete_sheet(request, pk):
+    sheet = get_object_or_404(Sheet, pk=pk)
+    if request.method == "POST":
+        sheet.delete()
+        messages.success(request, f"Successfully deleted '{sheet.title}'")
+        return redirect('index')
+    return render(request, "confirm_delete.html", {"sheet": sheet})
+
+@login_required(login_url='login')
+def edit_sheet(request, pk):
+    sheet = get_object_or_404(Sheet, pk=pk)
+    if request.method == "POST":
+        try:
+            #Extract form data
+            sheet.title = request.POST["title"]
+            sheet.composer = request.POST["composer"]
+            sheet.arranger = request.POST.get("arranger", "")
+            sheet.genre = request.POST.get("genre", "")
+            sheet.difficulty_level = request.POST.get("difficulty_level", "")
+            sheet.publication_year = request.POST.get("publication_year")
+            sheet.publisher = request.POST.get("publisher", "")
+            sheet.isbn = request.POST.get("isbn", "")
+            sheet.description = request.POST.get("description", "")
+            sheet.modified_by = request.user
+            
+            if "sheet_file" in request.FILES:
+                sheet.sheet_file = request.FILES["sheet_file"]
+            
+            #Handle optional fields
+            if not sheet.arranger:
+                sheet.arranger = None
+            if not sheet.genre:
+                sheet.genre = None
+            if not sheet.difficulty_level:
+                sheet.difficulty_level = None
+            if not sheet.publication_year:
+                sheet.publication_year = None
+            if not sheet.publisher:
+                sheet.publisher = None
+            if not sheet.isbn:
+                sheet.isbn = None
+            if not sheet.description:
+                sheet.description = None
+            
+            #Save the book using in-built save method
+            sheet.save()
+            
+            messages.success(request, f"Successfully updated '{sheet.title}'")
+            
+            #Return back to home page
+            return redirect('index')
+        #Error handling    
+        except Exception as e:
+            messages.error(request, f"Error updating book: {str(e)}")
+            return render(request, "edit_sheet.html", {
+                "sheet": sheet,
+                "genre_choices": Sheet.GENRE_CHOICES,
+                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+            })
+    
+    # If GET request, just show the form with existing data
+    return render(request, "edit_sheet.html", {
+                "sheet": sheet,
+                "genre_choices": Sheet.GENRE_CHOICES,
+                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+            })
+
+@login_required(login_url='login')
+def sheet_profile(request, pk):
+    sheet = get_object_or_404(Sheet, pk=pk)
+    return render(request, "sheet_profile.html", {"sheet": sheet})

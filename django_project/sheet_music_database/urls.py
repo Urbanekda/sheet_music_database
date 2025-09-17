@@ -27,8 +27,8 @@ urlpatterns = [
     path("sheet/add", views.add_sheet, name="add_sheet"),
     path('delete/<int:pk>/', views.delete_sheet, name='delete_book'),
     path("edit/<int:pk>", views.edit_sheet, name="edit_page"),
-    path("book/<int:pk>", views.sheet.profile, name="sheet_profile"), 
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', next_page="index"), name='login'),
+    path("book/<int:pk>", views.sheet_profile, name="sheet_profile"), 
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', next_page="home"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', views.register, name='register'),
 ]

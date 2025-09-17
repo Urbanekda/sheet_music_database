@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sheet Music Profile</title>
+</head>
+<body>
+    <h1>{{ sheet.title }} od {{ sheet.composer }}</h1>
+    <section>
+        <h2>File Overview</h2>
+        <ul>
+            <li><strong>Title:</strong> {{ sheet.title }}</li>
+            <li><strong>Composer:</strong> {{ sheet.composer }}</li>
+            <li><strong>Arranger:</strong> {{ sheet.arranger }}</li>
+            <li><strong>Genre:</strong> {{ sheet.genre }}</li>
+            <li><strong>Instrumentation:</strong> {{ sheet.instrumentation }}</li>
+            <li><strong>Year:</strong> {{ sheet.year }}</li>
+            <li><strong>Pages:</strong> {{ sheet.pages }}</li>
+            <li><strong>Language:</strong> {{ sheet.language }}</li>
+            <li><strong>Description:</strong> {{ sheet.description }}</li>
+            <li><strong>Uploaded by:</strong> {{ sheet.uploaded_by }}</li>
+            <li><strong>Date Uploaded:</strong> {{ sheet.date_uploaded }}</li>
+            <li><strong>File:</strong> <a href="{{ sheet.file.url }}">Download</a></li>
+        </ul>
+    </section>
+</body>
+</html>
