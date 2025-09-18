@@ -43,7 +43,8 @@ class Sheet(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='modified_sheets')
-    sheet_file = models.FileField(upload_to='sheets/')
+    sheet_file = models.FileField()
+    public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title

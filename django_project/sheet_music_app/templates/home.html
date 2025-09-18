@@ -7,15 +7,7 @@
     <!-- Add your CSS links here -->
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">Sheet Music DB</div>
-        <div class="profile-options">
-            <!-- Placeholder for user profile options -->
-            <a href="#">Login</a>
-            <a href="#">Register</a>
-            <!-- Add dropdown/profile menu here later -->
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
     <div class="container">
         <aside class="sidebar">
             <h3>Filters</h3>
@@ -45,27 +37,38 @@
             <div class="sheet-music-list">
                 <a href="{% url 'add_sheet' %}">Přidat noty</a>
                 <!-- Example items -->
+                {% for sheet in sheets %}
                 <div class="sheet-music-item">
-                    <h4>Moonlight Sonata</h4>
-                    <p>Composer: Beethoven</p>
-                    <p>Instrument: Piano</p>
+                    <h3>{{ sheet.title }}</h3>
+                    <div class="sheet-file-preview">
+                         {% if sheet.sheet_file %}
+                        {% if sheet.sheet_file.url|slice:"-4:"|lower == ".pdf" %}
+                        <embed src="{{ sheet.sheet_file.url }}" type="application/pdf" width="300px" height="400px"/>
+                        {% else %}
+                        <img src="{{ sheet.sheet_file.url }}" alt="Sheet preview"/>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="sheet-details">
+                        <p>Skladatel: {{ sheet.composer }}</p>
+                        <p>Rok vydání: {{ sheet.publication_year }}</p>
+                        <p>Žánr: {{ sheet.get_genre_display }}</p>
+                        <p>Obtížnost: {{ sheet.difficulty_level }}</p>
+                    </div>
+                    <div class="sheet-options">
+                        <a href="{% url 'sheet_profile' sheet.pk %}">Více</a>
+                        <a href="{% url 'edit_sheet' sheet.pk %}">Upravit</a>
+                        <form method="POST" action="{% url 'delete_sheet' sheet.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button" onclick="return confirm('Určitě chcete odstranit tyto noty?');">Odstranit</button>
+                    </form>
+                    </div>
                 </div>
-                <div class="sheet-music-item">
-                    <h4>Canon in D</h4>
-                    <p>Composer: Pachelbel</p>
-                    <p>Instrument: Violin</p>
-                </div>
-                <!-- More items will be rendered here -->
+                {% endfor %}
             </div>
         </main>
     </div>
-    <footer class="footer">
-        <div>
-            &copy; 2025 Sheet Music Database &mdash; 
-            <a href="mailto:info@sheetmusicdb.com" style="color:#fff; text-decoration:underline;">Contact Us</a> | 
-            <a href="#" style="color:#fff; text-decoration:underline;">About</a> | 
-            <a href="#" style="color:#fff; text-decoration:underline;">Privacy Policy</a>
-        </div>
-    </footer>
+    {% include 'footer.html' %}
 </body>
 </html>

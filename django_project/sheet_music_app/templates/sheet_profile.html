@@ -5,23 +5,43 @@
     <title>Sheet Music Profile</title>
 </head>
 <body>
-    <h1>{{ sheet.title }} od {{ sheet.composer }}</h1>
+    {% include 'navbar.html' %}
+    <header>
+        <h1>{{ sheet.title }} <small>od {{ sheet.composer }}</small></h1>
+    </header>
+
+    <nav>
+        <a href="{% url 'home' %}">← Back to Home</a>
+    </nav>
+
+    <h2>Detail notového záznamu</h2>
+    <div class="sheet-details-section">
+        <p>Žánr: {{ sheet.get_genre_display }}</p>
+        {% if sheet.publication_year %}<p>Rok vydání: {{ sheet.publication_year }}</p>{% endif %}
+        {% if sheet.description %}<p>Description: {{ sheet.description }}</p>{% endif %}
+        <p>Obtížnost: {{ sheet.get_difficulty_level_display }}</p>
+        <p>Nahrál: {{ sheet.created_by }}</p>
+        <p>Naposledy upraveno: {{ sheet.date_modified }}</p>
+
+            <div class="sheet-options"></div>
+            <a href="{% url 'edit_sheet' sheet.pk %}">Upravit</a>
+            <a href="{{ sheet.sheet_file.url }}" download>Stáhnout</a>
+            <form action="{% url 'delete_sheet' sheet.pk %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this sheet?');">Odstranit</button>
+    </div>
+
+    {% if sheet.sheet_file %}
     <section>
-        <h2>File Overview</h2>
-        <ul>
-            <li><strong>Title:</strong> {{ sheet.title }}</li>
-            <li><strong>Composer:</strong> {{ sheet.composer }}</li>
-            <li><strong>Arranger:</strong> {{ sheet.arranger }}</li>
-            <li><strong>Genre:</strong> {{ sheet.genre }}</li>
-            <li><strong>Instrumentation:</strong> {{ sheet.instrumentation }}</li>
-            <li><strong>Year:</strong> {{ sheet.year }}</li>
-            <li><strong>Pages:</strong> {{ sheet.pages }}</li>
-            <li><strong>Language:</strong> {{ sheet.language }}</li>
-            <li><strong>Description:</strong> {{ sheet.description }}</li>
-            <li><strong>Uploaded by:</strong> {{ sheet.uploaded_by }}</li>
-            <li><strong>Date Uploaded:</strong> {{ sheet.date_uploaded }}</li>
-            <li><strong>File:</strong> <a href="{{ sheet.file.url }}">Download</a></li>
-        </ul>
+      <div class="sheet-file-preview">
+                        {% if sheet.sheet_file.url|slice:"-4:"|lower == ".pdf" %}
+                        <embed src="{{ sheet.sheet_file.url }}" type="application/pdf" width="300px" height="400px"/>
+                        {% else %}
+                        <img src="{{ sheet.sheet_file.url }}" alt="Sheet preview"/>
+                        {% endif %}
+                    </div>
     </section>
+    {% endif %}
+    {% include 'footer.html' %}
 </body>
 </html>

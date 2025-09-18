@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 # Homepage view, registered users only
 @login_required(login_url='login')
 def home(request):
-    return render(request, "home.html", {})
+    return render(request, "home.html", {"sheets": Sheet.objects.all()})
 
 # User registration view
 def register(request):
@@ -35,7 +35,6 @@ def add_sheet(request):
             new_sheet = Sheet(
                 title=request.POST["title"],
                 composer=request.POST["composer"],
-                arranger=request.POST.get("arranger", ""),
                 genre=request.POST.get("genre", ""),
                 difficulty_level=request.POST.get("difficulty_level", ""),
                 publication_year=request.POST.get("publication_year"),
@@ -44,7 +43,8 @@ def add_sheet(request):
                 description=request.POST.get("description", ""),
                 created_by=request.user,
                 modified_by=request.user,
-                sheet_file=request.FILES["sheet_file"]
+                sheet_file=request.FILES["sheet_file"],
+                public=("public" in request.POST)
             )
             
             #Handle optional fields
@@ -69,7 +69,7 @@ def add_sheet(request):
             messages.success(request, f"Successfully added '{new_sheet.title}'")
             
             #Return back to home page
-            return redirect('index')
+            return redirect('home')
         #Error handling    
         except Exception as e:
             messages.error(request, f"Error adding book: {str(e)}")
@@ -90,7 +90,7 @@ def delete_sheet(request, pk):
     if request.method == "POST":
         sheet.delete()
         messages.success(request, f"Successfully deleted '{sheet.title}'")
-        return redirect('index')
+        return redirect('home')
     return render(request, "confirm_delete.html", {"sheet": sheet})
 
 @login_required(login_url='login')
@@ -98,45 +98,24 @@ def edit_sheet(request, pk):
     sheet = get_object_or_404(Sheet, pk=pk)
     if request.method == "POST":
         try:
-            #Extract form data
             sheet.title = request.POST["title"]
             sheet.composer = request.POST["composer"]
-            sheet.arranger = request.POST.get("arranger", "")
-            sheet.genre = request.POST.get("genre", "")
-            sheet.difficulty_level = request.POST.get("difficulty_level", "")
-            sheet.publication_year = request.POST.get("publication_year")
-            sheet.publisher = request.POST.get("publisher", "")
-            sheet.isbn = request.POST.get("isbn", "")
-            sheet.description = request.POST.get("description", "")
+            sheet.genre = request.POST.get("genre") or None
+            sheet.difficulty_level = request.POST.get("difficulty_level") or None
+            pub_year = request.POST.get("publication_year")
+            sheet.publication_year = int(pub_year) if pub_year else None
+            sheet.publisher = request.POST.get("publisher") or None
+            sheet.isbn = request.POST.get("isbn") or None
+            sheet.description = request.POST.get("description") or None
             sheet.modified_by = request.user
-            
-            if "sheet_file" in request.FILES:
+            sheet.public = "public" in request.POST
+
+            if "sheet_file" in request.FILES and request.FILES["sheet_file"]:
                 sheet.sheet_file = request.FILES["sheet_file"]
-            
-            #Handle optional fields
-            if not sheet.arranger:
-                sheet.arranger = None
-            if not sheet.genre:
-                sheet.genre = None
-            if not sheet.difficulty_level:
-                sheet.difficulty_level = None
-            if not sheet.publication_year:
-                sheet.publication_year = None
-            if not sheet.publisher:
-                sheet.publisher = None
-            if not sheet.isbn:
-                sheet.isbn = None
-            if not sheet.description:
-                sheet.description = None
-            
-            #Save the book using in-built save method
+
             sheet.save()
-            
             messages.success(request, f"Successfully updated '{sheet.title}'")
-            
-            #Return back to home page
-            return redirect('index')
-        #Error handling    
+            return redirect('home')
         except Exception as e:
             messages.error(request, f"Error updating book: {str(e)}")
             return render(request, "edit_sheet.html", {
@@ -144,13 +123,12 @@ def edit_sheet(request, pk):
                 "genre_choices": Sheet.GENRE_CHOICES,
                 "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
             })
-    
-    # If GET request, just show the form with existing data
+
     return render(request, "edit_sheet.html", {
-                "sheet": sheet,
-                "genre_choices": Sheet.GENRE_CHOICES,
-                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
-            })
+        "sheet": sheet,
+        "genre_choices": Sheet.GENRE_CHOICES,
+        "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+    })
 
 @login_required(login_url='login')
 def sheet_profile(request, pk):

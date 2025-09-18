@@ -6,64 +6,63 @@
     <title>Add Book</title>
     {% load static %}
     {{ form.media }}
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="form_container">
         <h1>Přidat noty</h1>
-        <form method="post"></form>
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-        <div class = "name_input">
-            <label for="name" class="form-label">Název skladby</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="composer_input">
-            <label for="composer" class="form-label">Skladatel</label>
-            <input type="text" name="composer" class="form-control" required>
-        
-        <div class="genre_input">
-            <label for="genre" class="form-label">Obtížnost</label>
-            <select class="form-select" id="genre" name="genre" required>
-                <option value="" selected disabled>Vyberte obtížnost...</option>
-                {% for genre_code, genre_name in topic_choices %}
-                    <option value="{{ genre_code }}">{{ genre_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="difficulty_input">
-            <label for="difficulty" class="form-label">Žánr</label>
-            <select class="form-select" id="difficulty" name="difficulty" required>
-                <option value="" selected disabled>Vyberte žánr...</option>
-                {% for difficulty_code, difficulty_name in difficulty_choices %}
-                    <option value="{{ difficulty_code }}">{{ difficulty_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="publication_year_input">
-            <label for="publication_year" class="form-label">Rok vydání</label>
-            <input type="number" name="publication_year" class="form-control">
-        </div>
-
-        <div class="publisher_input">
-            <label for="publisher" class="form-label">Vydavatel</label>
-            <input type="text" name="publisher" class="form-control">
-        </div> 
-        <div class="isbn_input">
-            <label for="isbn" class="form-label">ISBN</label>
-            <input type="text" name="isbn" class="form-control">
-        </div>
-        <div class="description_input">
-            <label for="description" class="form-label">Popis</label>
-            <textarea name="description" class="form-control"></textarea>
-        </div>
-        <div class="sheet_file_input">
-            <label for="sheet_file" class="form-label">Soubor s notami</label>
-            <input type="file" name="sheet_file" class="form-control" required>
-        </div>
-        <button type="submit" class="submit-button">Uložit noty</button>
+            <div class="title_input">
+                <label for="title" class="form-label">Název skladby</label>
+                <input type="text" name="title" id="title" class="form-control" required>
+            </div>
+            <div class="composer_input">
+                <label for="composer" class="form-label">Skladatel</label>
+                <input type="text" name="composer" id="composer" class="form-control" required>
+            </div>
+            <div class="genre_input">
+                <label for="genre" class="form-label">Žánr</label>
+                <select class="form-select" id="genre" name="genre" required>
+                    <option value="" selected disabled>Vyberte žánr...</option>
+                    {% for genre_code, genre_name in genre_choices %}
+                        <option value="{{ genre_code }}">{{ genre_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="difficulty_input">
+                <label for="difficulty_level" class="form-label">Obtížnost</label>
+                <select class="form-select" id="difficulty_level" name="difficulty_level" required>
+                    <option value="" selected disabled>Vyberte obtížnost...</option>
+                    {% for difficulty_code, difficulty_name in difficulty_choices %}
+                        <option value="{{ difficulty_code }}">{{ difficulty_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="publication_year_input">
+                <label for="publication_year" class="form-label">Rok vydání</label>
+                <input type="number" name="publication_year" id="publication_year" class="form-control">
+            </div>
+            <div class="publisher_input">
+                <label for="publisher" class="form-label">Vydavatel</label>
+                <input type="text" name="publisher" id="publisher" class="form-control">
+            </div> 
+            <div class="isbn_input">
+                <label for="isbn" class="form-label">ISBN</label>
+                <input type="text" name="isbn" id="isbn" class="form-control">
+            </div>
+            <div class="description_input">
+                <label for="description" class="form-label">Popis</label>
+                <textarea name="description" id="description" class="form-control"></textarea>
+            </div>
+            <div class="public_input">
+                <label for="public" class="form-label">Veřejné?</label>
+                <input type="checkbox" name="public" id="public" class="form-check">
+            <div class="sheet_file_input">
+                <label for="sheet_file" class="form-label">Soubor s notami</label>
+                <input type="file" name="sheet_file" id="sheet_file" class="form-control" required>
+            </div>
+            <button type="submit" class="submit-button">Uložit noty</button>
         </form>
     </div>
-    </div>
 </body>
+</html>
