@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from .models import Sheet
+from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -10,12 +11,32 @@ from django.contrib.auth.decorators import login_required
 # Homepage view, registered users only
 @login_required(login_url='login')
 def home(request):
-    return render(request, "home.html", {"sheets": Sheet.objects.all()})
+    sheets = Sheet.objects.all()
+    genre = request.GET.get('genre')
+    difficulty = request.GET.get('difficulty')
+    year = request.GET.get('year')
+
+    if genre and genre != 'all':
+        sheets = sheets.filter(genre=genre)
+    if difficulty and difficulty != 'all':
+        sheets = sheets.filter(difficulty_level=difficulty)
+    if year and year != 'all':
+        sheets = sheets.filter(publication_year=year)
+
+    return render(request, "home.html", {
+        "sheets": sheets,
+        "genre_choices": Sheet.GENRE_CHOICES,
+        "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+        "years": Sheet.objects.values_list('publication_year', flat=True).distinct().order_by('publication_year'),
+        "selected_genre": genre or 'all',
+        "selected_difficulty": difficulty or 'all',
+        "selected_year": year or 'all',
+    })
 
 # User registration view
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Registration successful. You can now log in.')
@@ -23,7 +44,7 @@ def register(request):
         else:
             messages.error(request, 'Registration failed. Please correct the errors below.')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
 
@@ -44,7 +65,8 @@ def add_sheet(request):
                 created_by=request.user,
                 modified_by=request.user,
                 sheet_file=request.FILES["sheet_file"],
-                public=("public" in request.POST)
+                public=("public" in request.POST),
+                preview_image=request.FILES["preview_image"]
             )
             
             #Handle optional fields
@@ -62,6 +84,8 @@ def add_sheet(request):
                 new_sheet.isbn = None
             if not new_sheet.description:
                 new_sheet.description = None
+            if not new_sheet.preview_image:
+                new_sheet.preview_image = None
             
             #Save the book using in-built save method
             new_sheet.save()
@@ -112,6 +136,9 @@ def edit_sheet(request, pk):
 
             if "sheet_file" in request.FILES and request.FILES["sheet_file"]:
                 sheet.sheet_file = request.FILES["sheet_file"]
+
+            if "preview_image" in request.FILES and request.FILES["preview_image"]:
+                sheet.preview_image = request.FILES["preview_image"]
 
             sheet.save()
             messages.success(request, f"Successfully updated '{sheet.title}'")

@@ -9,20 +9,20 @@
 </head>
 <body>
     <div class="form_container">
-        <h2>Login</h2>
+        <h2>Přihlášení</h2>
         <form method="post" class="form">
             {% csrf_token %}
             <div class="username_input">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">Uživatelské jméno</label>
                 <input type="text" name="username" class="form-control" required>
             </div>
             <div class="password_input">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">Heslo</label>
                 <input type="password" name="password" class="form-control" required>
             </div>
-            <button type="submit" class="submit-button">Login</button>
+            <button type="submit" class="submit-button">Přihlásit se</button>
         </form>
-        <p class="register-text">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+        <p class="register-text">Ještě nemáte účet? <a href="{% url 'register' %}">Zaregistrujte se zde</a></p>
     </div>
 </body>
 </html>

@@ -3,8 +3,10 @@
             <a href="{% url 'home' %}">Notová databáze</a>
         </div>
         <div class="profile-options">
-            <!-- Placeholder for user profile options -->
-            <p class="logout"><a href="{% url 'logout' %}">Odhlásit se</a></p>
-            <!-- Add dropdown/profile menu here later -->
+            <p class="welcome-message">Vítejte, {{ user.first_name }}!</p>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Odhlásit se</button>
+            </form>
         </div>
     </nav>

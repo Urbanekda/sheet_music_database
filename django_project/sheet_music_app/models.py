@@ -44,16 +44,11 @@ class Sheet(models.Model):
     created_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     modified_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='modified_sheets')
     sheet_file = models.FileField()
+    preview_image = models.ImageField(blank=True, null=True)
     public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
-    
-class UserProfile(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
     
 class Meta:
     ordering = ['-date_created']

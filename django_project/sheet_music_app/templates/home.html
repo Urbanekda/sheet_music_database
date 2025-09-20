@@ -1,67 +1,66 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Sheet Music Database</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Add your CSS links here -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     {% include 'navbar.html' %}
     <div class="container">
         <aside class="sidebar">
-            <h3>Filters</h3>
-            <!-- Filtering options go here -->
-            <div>
-                <label>Instrument</label>
-                <select>
-                    <option>All</option>
-                    <option>Piano</option>
-                    <option>Violin</option>
-                    <!-- ... -->
-                </select>
-            </div>
-            <div>
-                <label>Genre</label>
-                <select>
-                    <option>All</option>
-                    <option>Classical</option>
-                    <option>Jazz</option>
-                    <!-- ... -->
-                </select>
-            </div>
-            <!-- Add more filters as needed -->
+            <h1>Notová databáze</h1>
+            <form method="get">
+                <div>
+                    <label for="genre">Žánr</label>
+                    <select name="genre" id="genre">
+                        <option value="all" {% if selected_genre == 'all' %}selected{% endif %}>Vše</option>
+                        {% for code, name in genre_choices %}
+                            <option value="{{ code }}" {% if selected_genre == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="difficulty">Obtížnost</label>
+                    <select name="difficulty" id="difficulty">
+                        <option value="all" {% if selected_difficulty == 'all' %}selected{% endif %}>Vše</option>
+                        {% for code, name in difficulty_choices %}
+                            <option value="{{ code }}" {% if selected_difficulty == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="year">Rok vydání</label>
+                    <select name="year" id="year">
+                        <option value="all" {% if selected_year == 'all' %}selected{% endif %}>Vše</option>
+                        {% for y in years %}
+                            <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Filtrovat</button>
+            </form>
         </aside>
         <main class="main-content">
-            <h2>Sheet Music List</h2>
             <div class="sheet-music-list">
                 <a href="{% url 'add_sheet' %}">Přidat noty</a>
                 <!-- Example items -->
                 {% for sheet in sheets %}
                 <div class="sheet-music-item">
-                    <h3>{{ sheet.title }}</h3>
-                    <div class="sheet-file-preview">
-                         {% if sheet.sheet_file %}
-                        {% if sheet.sheet_file.url|slice:"-4:"|lower == ".pdf" %}
-                        <embed src="{{ sheet.sheet_file.url }}" type="application/pdf" width="300px" height="400px"/>
+                    <h2>{{ sheet.title }} od {{ sheet.composer }}</h2>
+                    <div class="sheet-preview-container">
+                        {% if sheet.preview_image %}
+                            <img src="{{ sheet.preview_image.url }}">
                         {% else %}
-                        <img src="{{ sheet.sheet_file.url }}" alt="Sheet preview"/>
-                        {% endif %}
+                            <img src="{% static 'images/placeholder.jpg' %}" alt="Žádný náhled">
                         {% endif %}
                     </div>
-                    
-                    <div class="sheet-details">
-                        <p>Skladatel: {{ sheet.composer }}</p>
-                        <p>Rok vydání: {{ sheet.publication_year }}</p>
-                        <p>Žánr: {{ sheet.get_genre_display }}</p>
-                        <p>Obtížnost: {{ sheet.difficulty_level }}</p>
                     </div>
                     <div class="sheet-options">
                         <a href="{% url 'sheet_profile' sheet.pk %}">Více</a>
-                        <a href="{% url 'edit_sheet' sheet.pk %}">Upravit</a>
-                        <form method="POST" action="{% url 'delete_sheet' sheet.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button" onclick="return confirm('Určitě chcete odstranit tyto noty?');">Odstranit</button>
+                        <a href="{{ sheet.sheet_file.url }}" download>Stáhnout</a>
                     </form>
                     </div>
                 </div>

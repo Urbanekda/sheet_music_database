@@ -58,6 +58,13 @@
                 <label for="public" class="form-label">Veřejné?</label>
                 <input type="checkbox" name="public" id="public" class="form-check" {% if sheet.public %}checked{% endif %}>
             </div>
+            <div class="preview_image_input">
+                <label for="preview_image" class="form-label">Náhledový obrázek</label>
+                <input type="file" name="preview_image" id="preview_image" class="form-control">
+                {% if sheet.preview_image %}
+                <p>Aktuální obrázek: <a href="{{ sheet.preview_image.url }}" target="_blank">{{ sheet.preview_image.name }}</a></p>
+                {% endif %}
+            </div>
             <div class="sheet_file_input">
                 <label for="sheet_file" class="form-label">Soubor s notami</label>
                 <input type="file" name="sheet_file" id="sheet_file" class="form-control">
