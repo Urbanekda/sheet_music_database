@@ -1,28 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    {% load static %}
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
-<body>
-    <div class="form_container">
-        <h2>Přihlášení</h2>
-        <form method="post" class="form">
-            {% csrf_token %}
-            <div class="username_input">
-                <label for="username" class="form-label">Uživatelské jméno</label>
-                <input type="text" name="username" class="form-control" required>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Přihlášení | Sheet Music DB{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Přihlášení
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Nesprávné uživatelské jméno nebo heslo. Zkuste to prosím znovu.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person-fill me-2"></i>Uživatelské jméno
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control form-control-lg" 
+                                       id="username" 
+                                       name="username" 
+                                       placeholder="Zadejte uživatelské jméno" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Prosím zadejte uživatelské jméno.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between">
+                                <label for="password" class="form-label">
+                                    <i class="bi bi-key-fill me-2"></i>Heslo
+                                </label>
+                                <a href="#" class="text-decoration-none small">Zapomněli jste heslo?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input type="password" 
+                                       class="form-control form-control-lg" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Zadejte heslo" 
+                                       required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <div class="invalid-feedback">
+                                    Prosím zadejte heslo.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Přihlásit se
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <p class="mb-0">
+                        Ještě nemáte účet? 
+                        <a href="{% url 'register' %}" class="text-primary text-decoration-none fw-bold">
+                            Zaregistrujte se zde
+                        </a>
+                    </p>
+                </div>
             </div>
-            <div class="password_input">
-                <label for="password" class="form-label">Heslo</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="submit-button">Přihlásit se</button>
-        </form>
-        <p class="register-text">Ještě nemáte účet? <a href="{% url 'register' %}">Zaregistrujte se zde</a></p>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const passwordInput = this.previousElementSibling;
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+    });
+
+    // Form validation
+    (function () {
+        'use strict'
+        
+        var forms = document.querySelectorAll('.needs-validation')
+        
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+{% endblock %}

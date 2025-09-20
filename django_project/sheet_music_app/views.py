@@ -11,7 +11,13 @@ from django.contrib.auth.decorators import login_required
 # Homepage view, registered users only
 @login_required(login_url='login')
 def home(request):
-    sheets = Sheet.objects.all()
+    # Regular users see only public sheets, staff and superusers see all
+    if request.user.is_staff or request.user.is_superuser:
+        sheets = Sheet.objects.all()
+    else:
+        sheets = Sheet.objects.filter(public=True)
+    
+    # Apply filters
     genre = request.GET.get('genre')
     difficulty = request.GET.get('difficulty')
     year = request.GET.get('year')
@@ -31,6 +37,7 @@ def home(request):
         "selected_genre": genre or 'all',
         "selected_difficulty": difficulty or 'all',
         "selected_year": year or 'all',
+        "is_superuser": request.user.is_superuser,
     })
 
 # User registration view
