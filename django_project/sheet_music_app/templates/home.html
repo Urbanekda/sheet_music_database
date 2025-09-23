@@ -3,14 +3,13 @@
 {% load permissions %}
 
 {% block title %}Notová databáze{% endblock %}
-
 {% block content %}
 <div class="container">
     <div class="row">
         <!-- Filters Sidebar -->
         <div class="col-lg-3 mb-4">
             <div class="card filter-card shadow-sm">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header">
                     <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filtry</h5>
                 </div>
                 <div class="card-body">
@@ -59,7 +58,8 @@
                 <h1 class="h3 mb-0">
                     <i class="bi bi-music-note-list text-primary me-2"></i>Notová databáze
                 </h1>
-                {% if is_staff or is_superuser %}
+
+                {% if user|is_editor or user|is_superuser %}
                     <a href="{% url 'add_sheet' %}" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Přidat noty
                     </a>
@@ -115,7 +115,7 @@
                                             <i class="bi bi-eye me-1"></i> Zobrazit detail
                                         </a>
                                         
-                                        {% if user|is_editor %}
+                                    {% if user|is_editor or user|is_superuser %}
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'edit_sheet' sheet.id %}" class="btn btn-outline-secondary">
                                                 <i class="bi bi-pencil"></i>

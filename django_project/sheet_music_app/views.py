@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from .models import Sheet
-from .forms import CustomUserCreationForm
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm, PasswordResetForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -53,8 +52,7 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
-
-
+    
 @login_required(login_url='login')
 def add_sheet(request):
     if request.method == "POST":
@@ -168,3 +166,9 @@ def edit_sheet(request, pk):
 def sheet_profile(request, pk):
     sheet = get_object_or_404(Sheet, pk=pk)
     return render(request, "sheet_profile.html", {"sheet": sheet})
+
+def terms_and_conditions(request):
+    return render(request, "terms_and_conditions.html")
+
+def privacy_policy(request):
+    return render(request, "privacy_policy.html")

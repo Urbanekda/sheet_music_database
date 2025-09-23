@@ -1,14 +1,44 @@
 /* Main color variables */
 :root {
-    --primary: #FFC107;  /* Yellow */
-    --primary-dark: #FFA000;
-    --primary-light: #FFECB3;
-    --secondary: #5D4037;  /* Brown */
-    --secondary-light: #8D6E63;
+    --secondary: #4d1919;
+    --primary-dark: #d67f4c;
+    --primary-light: #eae6d5;
+    --primary: #f4caa9;
+    --secondary-light: #e1b99e;
     --light: #F5F5F5;
     --dark: #212121;
     --gray: #757575;
     --light-gray: #E0E0E0;
+}
+
+.primary {
+    color: var(--primary);
+}
+
+.linear-gradient {
+  background: linear-gradient(0.25turn, #4d1919, #783a3a, #b95b3c, #d67f4c, #f4caa9);
+}
+
+.radial-gradient {
+  background: radial-gradient(circle, #4d1919, #783a3a, #b95b3c, #d67f4c, #f4caa9);
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+    color: var(--secondary) !important;
+}
+
+.primary-light {
+    color: var(--primary-light);
+}
+
+.bg-primary-light {
+    background-color: var(--primary-light) !important;
+    color: var(--secondary) !important;
+}
+
+.secondary {
+    color: var(--secondary);
 }
 
 /* Base styles */
@@ -20,8 +50,26 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1{
     font-weight: 600;
+    font-size: xx-large;
+    color: var(--secondary);
+}
+
+h2{
+    margin-bottom: 1rem;
+    font-size:large;
+    color: var(--secondary);
+}
+
+h3{
+    font-weight: 300;
+    font-size: medium;
+    color: var(--secondary);
+}
+
+h4, h5, h6 {
+    font-weight: 200;
     color: var(--secondary);
 }
 
@@ -42,9 +90,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: var(--secondary);
+    background-color: var(--light-gray);
+    border-color: var(--dark);
+    color: var(--dark);
     font-weight: 500;
 }
 
@@ -55,8 +103,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-outline-primary {
-    color: var(--primary);
-    border-color: var(--primary);
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 .btn-outline-primary:hover {
@@ -74,14 +122,9 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1.5rem;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
 .card-header {
     background-color: var(--primary);
-    color: var(--secondary);
+    color: var(--dark);
     font-weight: 600;
     border-bottom: none;
 }
@@ -118,7 +161,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Footer */
 footer {
-    background-color: var(--secondary);
+    background-color: var(--background-gradient);
     color: white;
     padding: 2rem 0;
     margin-top: 3rem;
@@ -166,7 +209,7 @@ footer {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #afafaf;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -202,11 +245,6 @@ footer {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 .card:hover .sheet-preview-container img {

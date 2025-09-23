@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Book</title>
-    {% load static %}
-    {{ form.media }}
-</head>
-<body>
-    <div class="form_container">
+{% extends "base.html" %}
+{% load static %}
+{{ form.media }}
+{% load permissions %}
+{% block title %}Upravit noty | Sheet Music DB{% endblock %}
+{% block content %}
+    <div class="container justify-content-center flex w-50 w-md-75 w-sm-100">
         <h1>Upravit noty</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -75,5 +71,7 @@
             <button type="submit" class="submit-button">Uložit změny</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}
+{% block extra_js %}
+<script></script>
+{% endblock %}

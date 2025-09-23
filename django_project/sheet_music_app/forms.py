@@ -19,3 +19,23 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+class PasswordResetForm(forms.Form):
+    new_password1 = forms.CharField(label='Nové heslo', widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label='Potvrďte nové heslo', widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
+
+        if new_password1 and new_password2 and new_password1 != new_password2:
+            raise forms.ValidationError("Hesla se neshodují.")
+        
+        return cleaned_data
+
+    def save(self, user, commit=True):
+        user.set_password(self.cleaned_data["new_password1"])
+        if commit:
+            user.save()
+        return user

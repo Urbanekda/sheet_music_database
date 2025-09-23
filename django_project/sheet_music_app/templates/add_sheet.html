@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Book</title>
-    {% load static %}
-    {{ form.media }}
-</head>
-<body>
-    <div class="form_container">
+{% extends "base.html" %}
+{% load static %}
+{% load permissions %}
+{% block title %}Přidat noty | Sheet Music DB{% endblock %}
+{% block content %}
+
+    <div class="container-lg justify-content-center flex w-50 w-md-75 w-sm-100">
         <h1>Přidat noty</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
             {% csrf_token %}
             <div class="title_input">
                 <label for="title" class="form-label">Název skladby</label>
@@ -66,8 +62,10 @@
                 <label for="sheet_file" class="form-label">Soubor s notami</label>
                 <input type="file" name="sheet_file" id="sheet_file" class="form-control" required>
             </div>
-            <button type="submit" class="submit-button">Uložit noty</button>
+            <button type="submit" class="btn btn-primary">Uložit noty</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}
+{% block extra_js %}
+<script></script>
+{% endblock %}

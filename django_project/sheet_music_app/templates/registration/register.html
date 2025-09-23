@@ -166,8 +166,8 @@
                         <div class="form-check mb-4">
                             <input class="form-check-input" type="checkbox" id="terms" required>
                             <label class="form-check-label" for="terms">
-                                Souhlasím s <a href="#" class="text-decoration-none">podmínkami použití</a> a 
-                                <a href="#" class="text-decoration-none">zásadami ochrany osobních údajů</a>.
+                                Souhlasím s <a href="{% url 'terms_and_conditions' %}" class="text-decoration-none">podmínkami použití</a> a 
+                                <a href="{% url 'privacy_policy' %}" class="text-decoration-none">zásadami ochrany osobních údajů</a>.
                             </label>
                             <div class="invalid-feedback">
                                 Musíte souhlasit s podmínkami registrace.
