@@ -7,12 +7,12 @@
 <div class="container">
     <div class="row">
         <!-- Filters Sidebar -->
-        <div class="col-lg-3 mb-4">
+        <div class="col-lg-3 mb-4 h-25">
             <div class="card filter-card shadow-sm">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filtry</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body max-h-25">
                     <form method="get" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="genre" class="form-label">Žánr</label>
@@ -45,7 +45,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-funnel-fill me-2"></i>Filtrovat
+                            <i class="me-2"></i>Filtrovat
                         </button>
                     </form>
                 </div>
@@ -114,21 +114,6 @@
                                         <a href="{% url 'sheet_profile' sheet.id %}" class="btn btn-outline-primary">
                                             <i class="bi bi-eye me-1"></i> Zobrazit detail
                                         </a>
-                                        
-                                    {% if user|is_editor or user|is_superuser %}
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'edit_sheet' sheet.id %}" class="btn btn-outline-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                                <span class="visually-hidden">Upravit</span>
-                                            </a>
-                                            <a href="{% url 'delete_sheet' sheet.id %}" 
-                                               class="btn btn-outline-danger" 
-                                               onclick="return confirm('Opravdu chcete smazat tyto noty? Tato akce je nevratná.')">
-                                                <i class="bi bi-trash"></i>
-                                                <span class="visually-hidden">Smazat</span>
-                                            </a>
-                                        </div>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

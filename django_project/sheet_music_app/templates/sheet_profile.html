@@ -4,113 +4,17 @@
 
 {% block title %}{{ sheet.title }} | Sheet Music DB{% endblock %}
 
-{% block extra_css %}
-<style>
-    .sheet-header {
-        background: linear-gradient(135deg, var(--primary-light), var(--primary));
-        color: white;
-        padding: 3rem 0;
-        margin-bottom: 2rem;
-        border-radius: 0.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .sheet-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url("{% static 'images/music-pattern.png' %}") center/cover;
-        opacity: 0.1;
-        z-index: 0;
-    }
-    
-    .sheet-header-content {
-        position: relative;
-        z-index: 1;
-    }
-    
-    .sheet-preview-container {
-        background-color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        margin-bottom: 2rem;
-    }
-    
-    .sheet-preview-container iframe,
-    .sheet-preview-container embed {
-        width: 100%;
-        min-height: 600px;
-        border: none;
-    }
-    
-    .sheet-meta {
-        background-color: white;
-        border-radius: 0.5rem;
-        padding: 1.5rem;
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
-    }
-    
-    .meta-item {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .meta-item:last-child {
-        border-bottom: none;
-    }
-    
-    .meta-label {
-        font-weight: 600;
-        color: var(--secondary);
-        margin-bottom: 0.25rem;
-    }
-    
-    .meta-value {
-        color: var(--dark);
-    }
-    
-    .description-box {
-        background-color: white;
-        border-radius: 0.5rem;
-        padding: 1.5rem;
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-    }
-    
-    .action-buttons .btn {
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    @media (max-width: 767.98px) {
-        .sheet-header {
-            padding: 2rem 0;
-        }
-        
-        .sheet-preview-container iframe,
-        .sheet-preview-container embed {
-            min-height: 400px;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="sheet-header mb-5">
+<div class="sheet-header mb-2 p-2">
     <div class="container">
         <div class="sheet-header-content text-center">
             <nav aria-label="breadcrumb" class="d-flex justify-content-center">
                 <ol class="breadcrumb mb-3">
-                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white">Domů</a></li>
-                    <li class="breadcrumb-item active text-white" aria-current="page">Detail not</li>
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Domů</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'sheet_profile' sheet.id %}">Detail not</a></li>
                 </ol>
             </nav>
-            <h1 class="display-5 fw-bold mb-2">{{ sheet.title }}</h1>
+            <h1 class="fw-bold mb-2">{{ sheet.title }}</h1>
             <p class="lead mb-0">
                 <i class="bi bi-person-badge me-2"></i>{{ sheet.composer }}
                 {% if sheet.arranger %}
@@ -134,7 +38,7 @@
             <div class="sheet-preview-container mb-4">
                 {% if sheet.sheet_file %}
                     {% if sheet.sheet_file.url|slice:"-4:"|lower == ".pdf" %}
-                        <embed src="{{ sheet.sheet_file.url }}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" />
+                        <embed src="{{ sheet.sheet_file.url }}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" class="w-100" />
                     {% else %}
                         <img src="{{ sheet.sheet_file.url }}" alt="{{ sheet.title }}" class="img-fluid w-100" />
                     {% endif %}
@@ -147,16 +51,18 @@
             </div>
             
             <!-- Description -->
-            {% if sheet.description %}
-                <div class="description-box">
-                    <h3 class="h5 mb-3">
-                        <i class="bi bi-card-text me-2 text-primary"></i>Popis
-                    </h3>
-                    <div class="text-muted">
+            <div class="description-box">
+                <h3 class="h5 mb-3">
+                    <i class="bi bi-card-text me-2 text-primary"></i>Popis
+                </h3>
+                <div class="text-muted">
+                    {% if sheet.description %}
                         {{ sheet.description|linebreaks }}
-                    </div>
+                    {% else %}
+                        <em class="text-secondary">Zatím bez popisu.</em>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </div>
         </div>
         
         <div class="col-lg-4">
@@ -165,10 +71,9 @@
                 <h3 class="h5 mb-3">
                     <i class="bi bi-info-circle me-2 text-primary"></i>Informace o skladbě
                 </h3>
-                
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-music-note-list me-2"></i>Žánr
+                        <i class="bi bi-music-note-list me-2"></i><strong>Žánr</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.get_genre_display|default:"Neuvedeno" }}
@@ -177,7 +82,7 @@
                 
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-speedometer2 me-2"></i>Obtížnost
+                        <i class="bi bi-speedometer2 me-2"></i><strong>Obtížnost</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.get_difficulty_level_display|default:"Neuvedeno" }}
@@ -187,7 +92,7 @@
                 {% if sheet.publication_year %}
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-calendar3 me-2"></i>Rok vydání
+                        <i class="bi bi-calendar3 me-2"></i><strong>Rok vydání</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.publication_year }}
@@ -198,7 +103,7 @@
                 {% if sheet.publisher %}
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-building me-2"></i>Vydavatel
+                        <i class="bi bi-building me-2"></i><strong>Vydavatel</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.publisher }}
@@ -209,7 +114,7 @@
                 {% if sheet.isbn %}
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-upc-scan me-2"></i>ISBN
+                        <i class="bi bi-upc-scan me-2"></i><strong>ISBN</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.isbn }}
@@ -219,7 +124,7 @@
                 
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-person-plus me-2"></i>Přidal
+                        <i class="bi bi-person-plus me-2"></i><strong>Přidal</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.created_by.get_full_name|default:sheet.created_by.username }}
@@ -228,7 +133,7 @@
                 
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-clock-history me-2"></i>Naposledy upraveno
+                        <i class="bi bi-clock-history me-2"></i><strong>Naposledy upraveno</strong>
                     </div>
                     <div class="meta-value">
                         {{ sheet.date_modified|date:"d.m.Y H:i" }}
@@ -236,20 +141,20 @@
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="mt-4 pt-3 border-top action-buttons">
+                <div class="mt-2 pt-3 action-buttons">
                     {% if sheet.sheet_file %}
-                        <a href="{{ sheet.sheet_file.url }}" class="btn btn-primary" download>
+                        <a href="{{ sheet.sheet_file.url }}" class="btn btn-primary mb-2" download>
                             <i class="bi bi-download me-2"></i>Stáhnout
                         </a>
                     {% endif %}
                     
-                    {% if user|is_editor or user == sheet.created_by %}
-                        <a href="{% url 'edit_sheet' sheet.id %}" class="btn btn-outline-secondary">
+                    {% if user|is_editor or user|is_superuser %}
+                        <a href="{% url 'edit_sheet' sheet.id %}" class="btn btn-outline-secondary mb-2">
                             <i class="bi bi-pencil me-2"></i>Upravit
                         </a>
                         
                         <button type="button" 
-                                class="btn btn-outline-danger" 
+                                class="btn btn-outline-danger mb-2" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#deleteModal">
                             <i class="bi bi-trash me-2"></i>Smazat
@@ -259,7 +164,7 @@
             </div>
             
             <!-- Additional Info -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4 h-25">
                 <div class="card-body">
                     <h5 class="card-title mb-3">
                         <i class="bi bi-info-circle me-2"></i>O skladbě
@@ -268,12 +173,6 @@
                         Tento notový zápis je součástí naší databáze. Pokud naleznete jakékoli nesrovnalosti nebo máte 
                         připomínky, neváhejte nás kontaktovat.
                     </p>
-                    {% if not sheet.public %}
-                        <div class="alert alert-warning small mb-0" role="alert">
-                            <i class="bi bi-eye-slash me-1"></i>
-                            Tento záznam je skrytý a vidí ho pouze registrovaní uživatelé s příslušným oprávněním.
-                        </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -281,7 +180,7 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-{% if user|is_editor or user == sheet.created_by %}
+{% if user|is_editor or user|is_superuser %}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

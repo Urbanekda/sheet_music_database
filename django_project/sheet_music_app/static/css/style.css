@@ -9,6 +9,7 @@
     --dark: #212121;
     --gray: #757575;
     --light-gray: #E0E0E0;
+    --gradient-main: linear-gradient(0.25turn, #4d1919, #783a3a, #b95b3c, #d67f4c, #f4caa9);
 }
 
 .primary {
@@ -58,13 +59,14 @@ h1{
 
 h2{
     margin-bottom: 1rem;
-    font-size:large;
+    font-size: x-large;
+    font-weight: 600;
     color: var(--secondary);
 }
 
 h3{
-    font-weight: 300;
-    font-size: medium;
+    font-weight: 600;
+    font-size: large;
     color: var(--secondary);
 }
 
@@ -75,7 +77,7 @@ h4, h5, h6 {
 
 /* Navbar */
 .navbar {
-    background-color: var(--secondary) !important;
+    background: linear-gradient(to left, #4d1919, #783a3a, #b95b3c, #d67f4c, #f4caa9) !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -161,7 +163,7 @@ h4, h5, h6 {
 
 /* Footer */
 footer {
-    background-color: var(--background-gradient);
+    background-color: linear-gradient(0.25turn, #4d1919, #783a3a, #b95b3c, #d67f4c, #f4caa9);
     color: white;
     padding: 2rem 0;
     margin-top: 3rem;
@@ -291,3 +293,96 @@ footer {
         height: 160px;
     }
 }
+
+.sheet-header {
+    background: url("{% static 'images/music-pattern.png' %}") center/cover;
+    color: var(--secondary);
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.sheet-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("{% static 'images/music-pattern.png' %}") center/cover;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.sheet-header-content {
+    position: relative;
+    z-index: 1;
+    color: var(--secondary);
+}
+
+.sheet-preview-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    height: 90vh;
+    width: 100%;
+}
+
+.sheet-preview-container embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.sheet-meta {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.meta-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.meta-item:last-child {
+    border-bottom: none;
+}
+
+.meta-label {
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 0.25rem;
+}
+
+.meta-value {
+    color: var(--dark);
+}
+
+.description-box {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    min-height: 250px;
+}
+
+/* Ensure long words/URLs in description don't overflow and content wraps nicely */
+.description-box .text-muted {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.description-box .text-muted p:last-child {
+    margin-bottom: 0;
+}
+
+.action-buttons .btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
