@@ -27,7 +27,7 @@
                 </button>
                 <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                     <img src="{% static 'images/tynsky_duch_logo.png' %}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
-                    <span class="text-black uncial-antiqua-regular">Schola Týnského Chrámu</span>
+                    <span class="text-black uncial-antiqua-regular">Schóla Týnského Chrámu</span>
                 </a>
                 <div class="navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
@@ -120,16 +120,28 @@
         </div>
     </main>
 
-    <footer class="bg-secondary py-4 mt-auto">
+    <footer class="bg-secondary py-3 mt-auto">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-white text-md-start">
-                    <p class="mb-0">Notová databáze</p>
-                    <p class="mb-0">Všechny notové materiály na jednom místě.</p>
+                    <p class="mb-2 text-white fs-5">Kontaktujte nás</p>
+                    <p class="mb-1"><i class="bi bi-envelope me-1"></i> ivo@kylar.cz</p>
+                    <p class="mb-1"><a href="https://tynskyduch.webnode.cz/" class="text-white"><i class="bi bi-globe me-1"></i>tynskykduch.cz</a></p>
+                    <p class="mb-0"><a href="https://www.facebook.com/tynskyduch/" class="text-white"><i class="bi bi-facebook me-1"></i>Tynskyduch</a></p>
                 </div>
-                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-                    <p class="mb-0">&copy; {% now "Y" %} Schola Týnského Chrámu</p>
-                    <p class="small mb-0">Všechna práva vyhrazena</p>
+                <div class="col-md-6 d-flex flex-column align-items-center align-items-md-end mt-2 mt-md-0 text-white">
+                    <div class="d-flex align-items-center gap-3 mt-4">
+                        <div class="text-end">
+                            <p class="mb-0">&copy; {% now "Y" %} Schola Týnského Chrámu</p>
+                            <p class="small mb-0">Všechna práva vyhrazena</p>
+                            <p class="small mb-0">Vytvořil s <i class="bi bi-heart-fill text-danger"></i> Daniel Urbánek</p>
+                        </div>
+                        <img src="{% static 'images/tynsky_chram_pohled.jpg' %}"
+                             alt="Týnský chrám"
+                             class="footer-mark d-none d-sm-block"
+                             loading="lazy">
+
+                    </div>
                 </div>
             </div>
         </div>

@@ -238,6 +238,21 @@ footer {
     margin-top: 3rem;
 }
 
+/* Small decorative mark in footer */
+.footer-mark {
+    width: 72px;
+    height: auto;
+    border-radius: 6px;
+    opacity: 0.9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 576px) {
+    .footer-mark {
+        width: 56px;
+    }
+}
+
 .pagination {
     color: var(--primary);
     font-weight: 200;
