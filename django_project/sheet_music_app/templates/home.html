@@ -8,12 +8,45 @@
     <div class="row">
         <!-- Filters Sidebar -->
         <div class="col-lg-3 mb-4 h-25">
+            <!-- Search Card -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0 "><i class="bi bi-search me-2"></i><strong>Vyhledávání</strong></h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="needs-validation" novalidate>
+                        <!-- Preserve existing filters -->
+                        <input type="hidden" name="genre" value="{{ selected_genre }}" />
+                        <input type="hidden" name="difficulty" value="{{ selected_difficulty }}" />
+                        <input type="hidden" name="year" value="{{ selected_year }}" />
+
+                        <div class="input-group">
+                            <span class="input-group-text" id="search-addon"><i class="bi bi-search"></i></span>
+                            <input type="text"
+                                   class="form-control"
+                                   name="q"
+                                   placeholder="Hledat v názvu, skladateli, vydavateli..."
+                                   value="{{ query }}"
+                                   aria-label="Hledat"
+                                   aria-describedby="search-addon" />
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i></i>Hledat
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card filter-card shadow-sm">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filtry</h5>
+                    <h5 class="mb-0"><i class="bi bi-funnel me-2"></i><strong>Filtry</strong></h5>
                 </div>
                 <div class="card-body max-h-25">
                     <form method="get" class="needs-validation" novalidate>
+                        <!-- Preserve search query when applying filters -->
+                        <input type="hidden" name="q" value="{{ query }}" />
                         <div class="mb-3">
                             <label for="genre" class="form-label">Žánr</label>
                             <select name="genre" id="genre" class="form-select">
@@ -70,7 +103,7 @@
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     {% for sheet in sheets %}
                     <div class="col">
-                        <div class="card h-100">
+                        <div class="card">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>
@@ -88,9 +121,9 @@
                                 
                                 <div class="sheet-preview-container mb-3">
                                     {% if sheet.preview_image %}
-                                        <img src="{{ sheet.preview_image.url }}" alt="Náhled {{ sheet.title }}" class="img-fluid">
+                                        <img src="{{ sheet.preview_image.url }}" alt="Náhled {{ sheet.title }}" class="">
                                     {% else %}
-                                        <img src="{% static 'images/placeholder.jpg' %}" alt="Žádný náhled" class="img-fluid">
+                                        <img src="{% static 'images/placeholder.jpg' %}" alt="Žádný náhled" class="">
                                     {% endif %}
                                 </div>
                                 
@@ -121,6 +154,31 @@
                     </div>
                     {% endfor %}
                 </div>
+
+                {% if is_paginated %}
+                <nav aria-label="Stránkování" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {# Build base query without page #}
+                        {% with base_query="q="|add:query|urlencode|add:"&genre="|add:selected_genre|urlencode|add:"&difficulty="|add:selected_difficulty|urlencode|add:"&year="|add:selected_year|urlencode %}
+
+                        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                            <a class="page-link text-secondary" href="?{{ base_query }}{% if page_obj.has_previous %}&page={{ page_obj.previous_page_number }}{% endif %}" tabindex="-1" aria-disabled="{% if not page_obj.has_previous %}true{% else %}false{% endif %}">Předchozí</a>
+                        </li>
+
+                        {% for num in paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link text-secondary" href="?{{ base_query }}&page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+
+                        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                            <a class="page-link text-secondary" href="?{{ base_query }}{% if page_obj.has_next %}&page={{ page_obj.next_page_number }}{% endif %}">Další</a>
+                        </li>
+
+                        {% endwith %}
+                    </ul>
+                </nav>
+                {% endif %}
             {% else %}
                 <div class="text-center py-5">
                     <div class="mb-4">

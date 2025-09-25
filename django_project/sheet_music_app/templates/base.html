@@ -12,19 +12,24 @@
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <!-- Custom CSS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <div class="container">
+                <!--<button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> -->
+                </button>
                 <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                     <img src="{% static 'images/tynsky_duch_logo.png' %}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
-                    <span class="bi ">Schola Týnského Chrámu</span>
+                    <span class="text-black uncial-antiqua-regular">Schola Týnského Chrámu</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                         </li>
@@ -68,7 +73,7 @@
                                     <li>
                                         <form class="dropdown-item text-danger" method="post" action="{% url 'logout' %}" id="logoutForm">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn align-baseline text-danger bi bi-box-arrow-right me-2">Odhlásit se</button>
+                                            <button type="submit" class="btn text-danger align-baseline"><i class="bi bi-box-arrow-right me-2"></i> Odhlásit se</button>
                                         </form>
                                     </li>
                                 </ul>

@@ -4,7 +4,9 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import Sheet
 from .forms import CustomUserCreationForm, PasswordResetForm
 from django.contrib.auth import logout
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # Homepage view, registered users only
@@ -20,6 +22,7 @@ def home(request):
     genre = request.GET.get('genre')
     difficulty = request.GET.get('difficulty')
     year = request.GET.get('year')
+    q = request.GET.get('q', '').strip()
 
     if genre and genre != 'all':
         sheets = sheets.filter(genre=genre)
@@ -28,8 +31,24 @@ def home(request):
     if year and year != 'all':
         sheets = sheets.filter(publication_year=year)
 
+    # Full-text style search across common fields
+    if q:
+        sheets = sheets.filter(
+            Q(title__icontains=q)
+            | Q(composer__icontains=q)
+            | Q(arranger__icontains=q)
+            | Q(publisher__icontains=q)
+            | Q(isbn__icontains=q)
+            | Q(description__icontains=q)
+        )
+
+    # Pagination: 6 items per page
+    paginator = Paginator(sheets.order_by('title'), 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "home.html", {
-        "sheets": sheets,
+        "sheets": page_obj,
         "genre_choices": Sheet.GENRE_CHOICES,
         "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
         "years": Sheet.objects.values_list('publication_year', flat=True).distinct().order_by('publication_year'),
@@ -37,6 +56,10 @@ def home(request):
         "selected_difficulty": difficulty or 'all',
         "selected_year": year or 'all',
         "is_superuser": request.user.is_superuser,
+        "query": q,
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "is_paginated": page_obj.has_other_pages(),
     })
 
 # User registration view
