@@ -1,3 +1,12 @@
+"""
+Views for the Sheet Music Database app.
+
+Notes for future maintainers:
+- Most views require authentication via @login_required (homepage and CRUD).
+- The homepage supports filtering, simple full-text search, and pagination.
+- Detail pages prefer slug URLs. A legacy PK-based route redirects to the slug.
+"""
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
@@ -14,17 +23,17 @@ from django.core.paginator import Paginator
 # Homepage view, registered users only
 @login_required(login_url='login')
 def home(request):
-    # Regular users see only public sheets, staff and superusers see all
+    # Access control: regular users see only public sheets; staff/superusers see all
     if request.user.is_staff or request.user.is_superuser:
         sheets = Sheet.objects.all()
     else:
         sheets = Sheet.objects.filter(public=True)
     
-    # Apply filters
+    # Apply filters (passed via GET). Values 'all' mean "no filter".
     genre = request.GET.get('genre')
     difficulty = request.GET.get('difficulty')
     year = request.GET.get('year')
-    q = request.GET.get('q', '').strip()
+    q = request.GET.get('q', '').strip()  # simple search query across several fields
 
     if genre and genre != 'all':
         sheets = sheets.filter(genre=genre)
@@ -33,7 +42,7 @@ def home(request):
     if year and year != 'all':
         sheets = sheets.filter(publication_year=year)
 
-    # Full-text style search across common fields
+    # Simple case-insensitive search across common text fields
     if q:
         sheets = sheets.filter(
             Q(title__icontains=q)
@@ -44,7 +53,7 @@ def home(request):
             | Q(description__icontains=q)
         )
 
-    # Pagination: 6 items per page
+    # Pagination: 6 items per page. We pass both page_obj and paginator to the template.
     paginator = Paginator(sheets.order_by('title'), 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -82,7 +91,7 @@ def register(request):
 def add_sheet(request):
     if request.method == "POST":
         try:
-            #Extract form data
+            # Extract form data. Optional fields are normalised to None if empty.
             new_sheet = Sheet(
                 title=request.POST["title"],
                 composer=request.POST["composer"],
@@ -99,7 +108,7 @@ def add_sheet(request):
                 preview_image=request.FILES["preview_image"]
             )
             
-            #Handle optional fields
+            # Handle optional fields
             if not new_sheet.arranger:
                 new_sheet.arranger = None
             if not new_sheet.genre:
@@ -117,14 +126,14 @@ def add_sheet(request):
             if not new_sheet.preview_image:
                 new_sheet.preview_image = None
             
-            #Save the book using in-built save method
+            # Persist to DB (model.save() also handles auto-slugging if needed)
             new_sheet.save()
             
             messages.success(request, f"Successfully added '{new_sheet.title}'")
             
-            #Return back to home page
+            # Redirect back to home page
             return redirect('home')
-        #Error handling    
+        # Error handling (surface the exception in a user-visible message)
         except Exception as e:
             messages.error(request, f"Error adding book: {str(e)}")
             return render(request, "add_sheet.html", {
@@ -157,6 +166,7 @@ def edit_sheet(request, pk):
             sheet.genre = request.POST.get("genre") or None
             sheet.difficulty_level = request.POST.get("difficulty_level") or None
             pub_year = request.POST.get("publication_year")
+            # publication_year is optional; coerce to int when provided
             sheet.publication_year = int(pub_year) if pub_year else None
             sheet.publisher = request.POST.get("publisher") or None
             sheet.isbn = request.POST.get("isbn") or None

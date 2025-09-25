@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load permissions %}
+{% load permissions %} {# custom permission filters for editor/superuser checks #}
 
 {% block title %}{{ sheet.title }} | Sheet Music DB{% endblock %}
 
@@ -11,6 +11,7 @@
             <nav aria-label="breadcrumb" class="d-flex justify-content-center">
                 <ol class="breadcrumb mb-2 mt-2">
                     <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-secondary">Domů</a></li>
+                    {# Prefer slug URL, fallback to legacy pk redirect #}
                     <li class="breadcrumb-item active" aria-current="page"><a href="{% if sheet.slug %}{% url 'sheet_profile' sheet.slug %}{% else %}{% url 'sheet_profile_by_pk' sheet.id %}{% endif %}" class="text-muted">Detail not</a></li>
                 </ol>
             </nav>
@@ -23,6 +24,7 @@
                 {% endif %}
             </p>
             {% if not sheet.public %}
+                {# Visibility hint for editors; regular users don't see non-public entries in listings #}
                 <span class="badge bg-warning mt-1 mb-2">
                     <i class="bi bi-eye-slash me-1"></i> Skryté (viditelné pouze pro editory)
                 </span>
@@ -37,6 +39,7 @@
             <!-- Sheet Preview -->
             <div class="sheet-preview-container-large mb-4">
                 {% if sheet.sheet_file %}
+                    {# Show PDF inline (no toolbar), otherwise render image #}
                     {% if sheet.sheet_file.url|slice:"-4:"|lower == ".pdf" %}
                         <embed src="{{ sheet.sheet_file.url }}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" class="w-100" />
                     {% else %}
@@ -71,6 +74,7 @@
                 <h3 class="h5 mb-3">
                     <i class="bi bi-info-circle me-2 text-primary"></i>Informace o skladbě
                 </h3>
+                {# These use get_FOO_display for human labels where applicable #}
                 <div class="meta-item">
                     <div class="meta-label">
                         <i class="bi bi-music-note-list me-2"></i><strong>Žánr</strong>
@@ -148,7 +152,7 @@
                         </a>
                     {% endif %}
                     
-                    {% if user|is_editor or user|is_superuser %}
+                    {% if user|is_editor or user|is_superuser %} {# Edit/Delete only for privileged roles #}
                         <a href="{% url 'edit_sheet' sheet.id %}" class="btn btn-outline-secondary mb-2">
                             <i class="bi bi-pencil me-2"></i>Upravit
                         </a>
@@ -179,7 +183,7 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Confirmation Modal (only rendered for editors/superusers) -->
 {% if user|is_editor or user|is_superuser %}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
