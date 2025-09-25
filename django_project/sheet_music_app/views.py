@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import Sheet
 from .forms import CustomUserCreationForm, PasswordResetForm
 from django.contrib.auth import logout
@@ -186,9 +188,18 @@ def edit_sheet(request, pk):
     })
 
 @login_required(login_url='login')
-def sheet_profile(request, pk):
-    sheet = get_object_or_404(Sheet, pk=pk)
+def sheet_profile(request, slug):
+    sheet = get_object_or_404(Sheet, slug=slug)
     return render(request, "sheet_profile.html", {"sheet": sheet})
+
+
+@login_required(login_url='login')
+def sheet_profile_redirect_by_pk(request, pk):
+    sheet = get_object_or_404(Sheet, pk=pk)
+    # Backfill slug if missing to guarantee redirect works
+    if not sheet.slug:
+        sheet.save()  # triggers auto slug generation in model.save()
+    return HttpResponseRedirect(reverse('sheet_profile', kwargs={'slug': sheet.slug}))
 
 def terms_and_conditions(request):
     return render(request, "terms_and_conditions.html")

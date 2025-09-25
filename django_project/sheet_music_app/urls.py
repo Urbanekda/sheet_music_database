@@ -13,7 +13,11 @@ urlpatterns = [
     path("sheet/add", views.add_sheet, name="add_sheet"),
     path('delete/<int:pk>/', views.delete_sheet, name='delete_sheet'),
     path("edit/<int:pk>", views.edit_sheet, name="edit_sheet"),
-    path("noty/<int:pk>", views.sheet_profile, name="sheet_profile"), 
+    # Slug-based detail URL
+    path("noty/<slug:slug>", views.sheet_profile, name="sheet_profile"),
+    # Legacy ID-based URL redirects to slug version for backwards compatibility
+    path("noty/id/<int:pk>", views.sheet_profile_redirect_by_pk, name="sheet_profile_by_pk"),
+    path("noty/<int:pk>", views.sheet_profile_redirect_by_pk),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', next_page="home"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', views.register, name='register'),

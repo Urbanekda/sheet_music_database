@@ -10,8 +10,8 @@
         <div class="sheet-header-content text-center">
             <nav aria-label="breadcrumb" class="d-flex justify-content-center">
                 <ol class="breadcrumb mb-2 mt-2">
-                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Domů</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'sheet_profile' sheet.id %}">Detail not</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-secondary">Domů</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="{% if sheet.slug %}{% url 'sheet_profile' sheet.slug %}{% else %}{% url 'sheet_profile_by_pk' sheet.id %}{% endif %}" class="text-muted">Detail not</a></li>
                 </ol>
             </nav>
             <h1 class="fw-bold mb-2">{{ sheet.title }}</h1>

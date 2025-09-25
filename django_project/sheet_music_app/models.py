@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 class Sheet(models.Model):
     
@@ -46,9 +47,23 @@ class Sheet(models.Model):
     sheet_file = models.FileField()
     preview_image = models.ImageField(blank=True, null=True)
     public = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        # Auto-generate slug from title if not set
+        if not self.slug and self.title:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 2
+            # Ensure uniqueness
+            while Sheet.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
     
 class Meta:
     ordering = ['-date_created']
