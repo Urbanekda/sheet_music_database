@@ -81,5 +81,8 @@ class Sheet(models.Model):
 # to the Sheet model. If you want default ordering on queries, indent this class so it
 # lives inside Sheet (as an inner class). Left unchanged here intentionally.
 class Meta:
-    ordering = ['-date_created']
+    ordering = ['-date_created'],
+    permissions = [
+        ("can_view_private", "Can view private sheets"),
+    ]
 

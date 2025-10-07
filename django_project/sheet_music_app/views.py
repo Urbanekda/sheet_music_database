@@ -24,7 +24,7 @@ from django.core.paginator import Paginator
 @login_required(login_url='login')
 def home(request):
     # Access control: regular users see only public sheets; staff/superusers see all
-    if request.user.is_staff or request.user.is_superuser:
+    if request.user.is_staff or request.user.is_superuser or request.user.groups.filter(name="Internal").exists():
         sheets = Sheet.objects.all()
     else:
         sheets = Sheet.objects.filter(public=True)

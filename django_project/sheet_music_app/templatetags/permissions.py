@@ -1,5 +1,5 @@
 from django import template
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
 register = template.Library()
 
@@ -15,4 +15,8 @@ def is_superuser(user):
     """Check if user is an admin (superuser)"""
     if not hasattr(user, 'is_authenticated'):
         return False
-    return user.is_authenticated and user.is_superuser
+    return user.is_authenticated and (user.is_superuser)
+
+@register.filter(name='in_group')
+def in_group(user, group_name):
+    return user.groups.filter(name=group_name).exists()
