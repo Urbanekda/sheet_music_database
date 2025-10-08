@@ -143,6 +143,21 @@
                         {{ sheet.date_modified|date:"d.m.Y H:i" }}
                     </div>
                 </div>
+
+                {% if sheet.tags.all %}
+                <div class="meta-item">
+                    <div class="meta-label">
+                        <i class="bi bi-tags me-2"></i><strong>Tagy</strong>
+                    </div>
+                    <div class="meta-value">
+                        {% for tag in sheet.tags.all %}
+                            <span class="badge bg-secondary me-1 mb-1">{{ tag.name }}</span>
+                        {% empty %}
+                            <span class="text-muted">Žádné</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
                 
                 <!-- Action Buttons -->
                 <div class="mt-2 pt-3 action-buttons">

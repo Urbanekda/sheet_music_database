@@ -50,6 +50,11 @@
                 <label for="description" class="form-label">Popis</label>
                 <textarea name="description" id="description" class="form-control">{{ sheet.description }}</textarea>
             </div>
+            <div class="tags_input">
+                <label for="tags" class="form-label">Tagy</label>
+                <input type="text" name="tags" id="tags" class="form-control" value="{{ tags_csv }}" placeholder="oddělené čárkou, např. church, svatba, advent">
+                <div class="form-text">Přidejte krátké štítky pro snadnější vyhledávání. Oddělujte čárkou.</div>
+            </div>
             <div class="public_input">
                 <label for="public" class="form-label">Veřejné?</label>
                 <input type="checkbox" name="public" id="public" class="form-check" {% if sheet.public %}checked{% endif %}>

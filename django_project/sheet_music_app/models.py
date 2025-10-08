@@ -1,6 +1,17 @@
 from django.db import models
 from django.utils.text import slugify
 
+class Tag(models.Model):
+    """Simple tag entity for labeling sheets."""
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Sheet(models.Model):
     """Represents a single sheet-music record.
 
@@ -59,6 +70,8 @@ class Sheet(models.Model):
     preview_image = models.ImageField(blank=True, null=True)
     public = models.BooleanField(default=False)
     slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
+    # Tags are editor-managed and visible to all users
+    tags = models.ManyToManyField(Tag, blank=True, related_name="sheets")
     
     def __str__(self):
         return self.title

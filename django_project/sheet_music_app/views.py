@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Sheet
+from .models import Sheet, Tag
 from .forms import CustomUserCreationForm, PasswordResetForm
 from django.contrib.auth import logout
 from django.db.models import Q
@@ -51,10 +51,11 @@ def home(request):
             | Q(publisher__icontains=q)
             | Q(isbn__icontains=q)
             | Q(description__icontains=q)
-        )
+            | Q(tags__name__icontains=q)
+        ).distinct()
 
-    # Pagination: 6 items per page. We pass both page_obj and paginator to the template.
-    paginator = Paginator(sheets.order_by('title'), 6)
+    # Prefetch tags to avoid N+1 when rendering badges; paginate 6 per page
+    paginator = Paginator(sheets.prefetch_related('tags').order_by('title'), 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -128,6 +129,23 @@ def add_sheet(request):
             
             # Persist to DB (model.save() also handles auto-slugging if needed)
             new_sheet.save()
+
+            # Tags: comma-separated list from input named "tags"
+            tags_input = request.POST.get("tags", "")
+            if tags_input:
+                tag_names = [t.strip() for t in tags_input.split(",")]
+                tag_objs = []
+                for name in tag_names:
+                    if not name:
+                        continue
+                    # Case-insensitive lookup; create preserving original casing
+                    existing = Tag.objects.filter(name__iexact=name).first()
+                    if existing:
+                        tag_objs.append(existing)
+                    else:
+                        tag_objs.append(Tag.objects.create(name=name))
+                if tag_objs:
+                    new_sheet.tags.add(*tag_objs)
             
             messages.success(request, f"Successfully added '{new_sheet.title}'")
             
@@ -181,6 +199,22 @@ def edit_sheet(request, pk):
                 sheet.preview_image = request.FILES["preview_image"]
 
             sheet.save()
+
+            # Update tags from comma-separated input
+            tags_input = request.POST.get("tags", "")
+            tag_objs = []
+            if tags_input:
+                tag_names = [t.strip() for t in tags_input.split(",")]
+                for name in tag_names:
+                    if not name:
+                        continue
+                    existing = Tag.objects.filter(name__iexact=name).first()
+                    if existing:
+                        tag_objs.append(existing)
+                    else:
+                        tag_objs.append(Tag.objects.create(name=name))
+            # If no tags_input provided (empty string), clear tags
+            sheet.tags.set(tag_objs)
             messages.success(request, f"Successfully updated '{sheet.title}'")
             return redirect('home')
         except Exception as e:
@@ -189,12 +223,14 @@ def edit_sheet(request, pk):
                 "sheet": sheet,
                 "genre_choices": Sheet.GENRE_CHOICES,
                 "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+                "tags_csv": ", ".join(sheet.tags.values_list('name', flat=True)),
             })
 
     return render(request, "edit_sheet.html", {
         "sheet": sheet,
         "genre_choices": Sheet.GENRE_CHOICES,
         "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+        "tags_csv": ", ".join(sheet.tags.values_list('name', flat=True)),
     })
 
 @login_required(login_url='login')

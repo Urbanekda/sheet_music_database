@@ -141,6 +141,14 @@
                                         <strong>Rok:</strong> {{ sheet.publication_year|default:"Neuveden" }}
                                     </li>
                                 </ul>
+
+                                {% if sheet.tags.all %}
+                                <div class="mb-3">
+                                    {% for tag in sheet.tags.all|slice:":3" %}
+                                        <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                                 
                                 <div class="mt-auto pt-2">
                                     <div class="d-grid gap-2">
