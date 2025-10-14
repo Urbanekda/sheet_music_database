@@ -30,15 +30,18 @@ def home(request):
         sheets = Sheet.objects.filter(public=True)
     
     # Apply filters (passed via GET). Values 'all' mean "no filter".
-    genre = request.GET.get('genre')
-    difficulty = request.GET.get('difficulty')
+    cast = request.GET.get('cast')
+    season = request.GET.get('season')
+    use = request.GET.get('use')
     year = request.GET.get('year')
     q = request.GET.get('q', '').strip()  # simple search query across several fields
 
-    if genre and genre != 'all':
-        sheets = sheets.filter(genre=genre)
-    if difficulty and difficulty != 'all':
-        sheets = sheets.filter(difficulty_level=difficulty)
+    if cast and cast != 'all':
+        sheets = sheets.filter(cast=cast)
+    if season and season != 'all':
+        sheets = sheets.filter(season=season)
+    if use and use != 'all':
+        sheets = sheets.filter(use=use)
     if year and year != 'all':
         sheets = sheets.filter(publication_year=year)
 
@@ -61,11 +64,13 @@ def home(request):
 
     return render(request, "home.html", {
         "sheets": page_obj,
-        "genre_choices": Sheet.GENRE_CHOICES,
-        "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+        "cast_choices": Sheet.CAST_CHOICES,
+        "season_choices": Sheet.SEASON_CHOICES,
+        "use_choices": Sheet.USE_CHOICES,
         "years": Sheet.objects.values_list('publication_year', flat=True).distinct().order_by('publication_year'),
-        "selected_genre": genre or 'all',
-        "selected_difficulty": difficulty or 'all',
+        "selected_cast": cast or 'all',
+        "selected_season": season or 'all',
+        "selected_use": use or 'all',
         "selected_year": year or 'all',
         "is_superuser": request.user.is_superuser,
         "query": q,
@@ -96,8 +101,9 @@ def add_sheet(request):
             new_sheet = Sheet(
                 title=request.POST["title"],
                 composer=request.POST["composer"],
-                genre=request.POST.get("genre", ""),
-                difficulty_level=request.POST.get("difficulty_level", ""),
+                cast=request.POST.get("cast", ""),
+                season=request.POST.get("season", ""),
+                use=request.POST.get("use", ""),
                 publication_year=request.POST.get("publication_year"),
                 publisher=request.POST.get("publisher", ""),
                 isbn=request.POST.get("isbn", ""),
@@ -106,16 +112,19 @@ def add_sheet(request):
                 modified_by=request.user,
                 sheet_file=request.FILES["sheet_file"],
                 public=("public" in request.POST),
-                preview_image=request.FILES["preview_image"]
+                preview_image=request.FILES.get("preview_image")
             )
             
             # Handle optional fields
+            # Handle optional fields
             if not new_sheet.arranger:
                 new_sheet.arranger = None
-            if not new_sheet.genre:
-                new_sheet.genre = None
-            if not new_sheet.difficulty_level:
-                new_sheet.difficulty_level = None
+            if not new_sheet.cast:
+                new_sheet.cast = None
+            if not new_sheet.season:
+                new_sheet.season = None
+            if not new_sheet.use:
+                new_sheet.use = None
             if not new_sheet.publication_year:
                 new_sheet.publication_year = None
             if not new_sheet.publisher:
@@ -124,8 +133,6 @@ def add_sheet(request):
                 new_sheet.isbn = None
             if not new_sheet.description:
                 new_sheet.description = None
-            if not new_sheet.preview_image:
-                new_sheet.preview_image = None
             
             # Persist to DB (model.save() also handles auto-slugging if needed)
             new_sheet.save()
@@ -155,14 +162,16 @@ def add_sheet(request):
         except Exception as e:
             messages.error(request, f"Error adding book: {str(e)}")
             return render(request, "add_sheet.html", {
-                "genre_choices": Sheet.GENRE_CHOICES,
-                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+                "cast_choices": Sheet.CAST_CHOICES,
+                "season_choices": Sheet.SEASON_CHOICES,
+                "use_choices": Sheet.USE_CHOICES,
             })
     
     # If GET request, just show the form
     return render(request, "add_sheet.html", {
-                "genre_choices": Sheet.GENRE_CHOICES,
-                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+                "cast_choices": Sheet.CAST_CHOICES,
+                "season_choices": Sheet.SEASON_CHOICES,
+                "use_choices": Sheet.USE_CHOICES,
             })
 
 @login_required(login_url='login')
@@ -181,8 +190,9 @@ def edit_sheet(request, pk):
         try:
             sheet.title = request.POST["title"]
             sheet.composer = request.POST["composer"]
-            sheet.genre = request.POST.get("genre") or None
-            sheet.difficulty_level = request.POST.get("difficulty_level") or None
+            sheet.cast = request.POST.get("cast") or None
+            sheet.season = request.POST.get("season") or None
+            sheet.use = request.POST.get("use") or None
             pub_year = request.POST.get("publication_year")
             # publication_year is optional; coerce to int when provided
             sheet.publication_year = int(pub_year) if pub_year else None
@@ -221,23 +231,23 @@ def edit_sheet(request, pk):
             messages.error(request, f"Error updating book: {str(e)}")
             return render(request, "edit_sheet.html", {
                 "sheet": sheet,
-                "genre_choices": Sheet.GENRE_CHOICES,
-                "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
+                "cast_choices": Sheet.CAST_CHOICES,
+                "season_choices": Sheet.SEASON_CHOICES,
+                "use_choices": Sheet.USE_CHOICES,
                 "tags_csv": ", ".join(sheet.tags.values_list('name', flat=True)),
             })
 
     return render(request, "edit_sheet.html", {
         "sheet": sheet,
-        "genre_choices": Sheet.GENRE_CHOICES,
-        "difficulty_choices": Sheet.DIFFICULTY_CHOICES,
-        "tags_csv": ", ".join(sheet.tags.values_list('name', flat=True)),
+        "cast_choices": Sheet.CAST_CHOICES,
+        "season_choices": Sheet.SEASON_CHOICES,
+        "use_choices": Sheet.USE_CHOICES,
     })
 
 @login_required(login_url='login')
 def sheet_profile(request, slug):
     sheet = get_object_or_404(Sheet, slug=slug)
     return render(request, "sheet_profile.html", {"sheet": sheet})
-
 
 @login_required(login_url='login')
 def sheet_profile_redirect_by_pk(request, pk):

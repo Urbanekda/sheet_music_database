@@ -16,21 +16,30 @@
                 <label for="composer" class="form-label">Skladatel</label>
                 <input type="text" name="composer" id="composer" class="form-control" required>
             </div>
-            <div class="genre_input">
-                <label for="genre" class="form-label">Žánr</label>
-                <select class="form-select" id="genre" name="genre" required>
-                    <option value="" selected disabled>Vyberte žánr...</option>
-                    {% for genre_code, genre_name in genre_choices %}
-                        <option value="{{ genre_code }}">{{ genre_name }}</option>
+            <div class="cast_input">
+                <label for="cast" class="form-label">Obsazení</label>
+                <select class="form-select" id="cast" name="cast" required>
+                    <option value="" selected disabled>Vyberte obsazení...</option>
+                    {% for cast_code, cast_name in cast_choices %}
+                        <option value="{{ cast_code }}">{{ cast_name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="difficulty_input">
-                <label for="difficulty_level" class="form-label">Obtížnost</label>
-                <select class="form-select" id="difficulty_level" name="difficulty_level" required>
-                    <option value="" selected disabled>Vyberte obtížnost...</option>
-                    {% for difficulty_code, difficulty_name in difficulty_choices %}
-                        <option value="{{ difficulty_code }}">{{ difficulty_name }}</option>
+            <div class="season_input">
+                <label for="season" class="form-label">Liturgické období</label>
+                <select class="form-select" id="season" name="season" required>
+                    <option value="" selected disabled>Vyberte liturgické období...</option>
+                    {% for season_code, season_name in season_choices %}
+                        <option value="{{ season_code }}">{{ season_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="use_input">
+                <label for="use" class="form-label">Liturgická příležitost</label>
+                <select class="form-select" id="use" name="use" required>
+                    <option value="" selected disabled>Vyberte liturgickou příležitost...</option>
+                    {% for use_code, use_name in use_choices %}
+                        <option value="{{ use_code }}">{{ use_name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -68,6 +77,7 @@
                 <input type="file" name="sheet_file" id="sheet_file" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Uložit noty</button>
+            <a class="btn btn-outline-danger" href="{% url 'home' %}">Zpět</a>
         </form>
     </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load permissions %} {# custom permission filters used for editor/superuser checks #}
+{% load permissions %}
 
 {% block title %}Notová databáze{% endblock %}
 {% block content %}
@@ -16,8 +16,9 @@
                 <div class="card-body">
                     <form method="get" class="needs-validation" novalidate>
                         <!-- Preserve existing filters when searching -->
-                        <input type="hidden" name="genre" value="{{ selected_genre }}" />
-                        <input type="hidden" name="difficulty" value="{{ selected_difficulty }}" />
+                        <input type="hidden" name="cast" value="{{ selected_cast }}" />
+                        <input type="hidden" name="season" value="{{ selected_season }}" />
+                        <input type="hidden" name="use" value="{{ selected_use }}" />
                         <input type="hidden" name="year" value="{{ selected_year }}" />
 
                         <div class="input-group">
@@ -48,21 +49,31 @@
                         <!-- Preserve search query when applying filters -->
                         <input type="hidden" name="q" value="{{ query }}" />
                         <div class="mb-3">
-                            <label for="genre" class="form-label">Žánr</label>
-                            <select name="genre" id="genre" class="form-select">
-                                <option value="all" {% if selected_genre == 'all' %}selected{% endif %}>Všechny žánry</option>
-                                {% for code, name in genre_choices %}
-                                    <option value="{{ code }}" {% if selected_genre == code|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+                            <label for="cast" class="form-label">Sborové obsazení</label>
+                            <select name="cast" id="cast" class="form-select">
+                                <option value="all" {% if selected_cast == 'all' %}selected{% endif %}>Všechna obsazení</option>
+                                {% for code, name in cast_choices %}
+                                    <option value="{{ code }}" {% if selected_cast == code|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="difficulty" class="form-label">Obtížnost</label>
-                            <select name="difficulty" id="difficulty" class="form-select">
-                                <option value="all" {% if selected_difficulty == 'all' %}selected{% endif %}>Všechny úrovně</option>
-                                {% for code, name in difficulty_choices %}
-                                    <option value="{{ code }}" {% if selected_difficulty == code|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+                            <label for="season" class="form-label">Liturgické období</label>
+                            <select name="season" id="season" class="form-select">
+                                <option value="all" {% if selected_season == 'all' %}selected{% endif %}>Všechna období</option>
+                                {% for code, name in season_choices %}
+                                    <option value="{{ code }}" {% if selected_season == code|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="use" class="form-label">Příležitost</label>
+                            <select name="use" id="use" class="form-select">
+                                <option value="all" {% if selected_use == 'all' %}selected{% endif %}>Všechny příležitosti</option>
+                                {% for code, name in use_choices %}
+                                    <option value="{{ code }}" {% if selected_use == code|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -128,21 +139,28 @@
                                 </div>
                                 
                                 <ul class="list-group list-group-flush mb-3">
+                                    {% if sheet.cast %}
                                     <li class="list-group-item px-0">
-                                        <i class="bi bi-music-note-list"></i>
-                                        <strong>Žánr:</strong> {{ sheet.get_genre_display|default:"Neuvedeno" }}
+                                        <i class="bi bi-people"></i>
+                                        <strong>Obsazení:</strong> {{ sheet.get_cast_display }}
                                     </li>
+                                    {% endif %}
+                                    {% if sheet.season %}
                                     <li class="list-group-item px-0">
-                                        <i class="bi bi-speedometer2"></i>
-                                        <strong>Obtížnost:</strong> {{ sheet.get_difficulty_level_display|default:"Neuvedeno" }}
+                                        <i class="bi bi-calendar3"></i>
+                                        <strong>Období:</strong> {{ sheet.get_season_display }}
                                     </li>
+                                    {% endif %}
+            
+                                    {% if sheet.publication_year %}
                                     <li class="list-group-item px-0">
                                         <i class="bi bi-calendar"></i>
-                                        <strong>Rok:</strong> {{ sheet.publication_year|default:"Neuveden" }}
+                                        <strong>Rok:</strong> {{ sheet.publication_year }}
                                     </li>
+                                    {% endif %}
                                 </ul>
 
-                                {% if sheet.tags.all %}
+                                {% if user|is_editor or user|is_superuser or user|in_group:"Internal" and sheet.tags.all %}
                                 <div class="mb-3">
                                     {% for tag in sheet.tags.all|slice:":3" %}
                                         <span class="badge bg-secondary me-1">{{ tag.name }}</span>
@@ -167,7 +185,7 @@
                 <nav aria-label="Stránkování" class="mt-4">
                     <ul class="pagination justify-content-center">
                         {# Build base query without page #}
-                        {% with base_query="q="|add:query|urlencode|add:"&genre="|add:selected_genre|urlencode|add:"&difficulty="|add:selected_difficulty|urlencode|add:"&year="|add:selected_year|urlencode %}
+                        {% with base_query="q="|add:query|urlencode|add:"&cast="|add:selected_cast|urlencode|add:"&season="|add:selected_season|urlencode|add:"&use="|add:selected_use|urlencode|add:"&year="|add:selected_year|urlencode %}
 
                         <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
                             <a class="page-link text-secondary" href="?{{ base_query }}{% if page_obj.has_previous %}&page={{ page_obj.previous_page_number }}{% endif %}" tabindex="-1" aria-disabled="{% if not page_obj.has_previous %}true{% else %}false{% endif %}">Předchozí</a>

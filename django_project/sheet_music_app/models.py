@@ -21,43 +21,46 @@ class Sheet(models.Model):
     - Slug is auto-generated from title in save() if not provided.
     - Public flag controls visibility for non-staff users.
     """
+
+    CAST_CHOICES = [
+        ("SATB", "satb"),
+        ("SSATB", "ssatb"),
+        ("SSAA", "ssaa"),
+        ("SSAB", "ssab"),
+        ("SSA", "ssa"),
+        ("SAT", "sat"),
+        ("SAB", "sab")
+    ]
+
     
-    RELIGIOUS = "REL"
-    CHORAL = "CHO"
-    JAZZ = "JAZ"
-    POPULAR = "POP"
-    CLASSICAL = "CLA"
-    SECULAR = "SEC"
-    FOLCLORE = "FOL"
 
-    GENRE_CHOICES = [
-        (RELIGIOUS, "Duchovní"),
-        (CHORAL, "Sborová"),
-        (JAZZ, "Jazzová"),
-        (POPULAR, "Populární"),
-        (CLASSICAL, "Klasická"),
-        (SECULAR, "Světská"),
-        (FOLCLORE, "Folklórní"),
+    SEASON_CHOICES = [
+        ("ADVENT", "Advent"),
+        ("CHRISTMAS", "Vánoce"),
+        ("LENT", "Půst"),
+        ("EASTER", "Velikonoce"),
+        ("PENTECOST", "Letnice"),
+        ("HOLY_TRINITY", "Nejsvětější Trojice"),
+        ("INTERLUDE", "Mezidobí"),
     ]
 
-    # Difficulty is stored as a char code ("1".."5"). The labels are localized.
-    DIFFICULTY_CHOICES = [
-        (1, 'Velmi snadná'),
-        (2, 'Snadná'),
-        (3, 'Střední'),
-        (4, 'Obtížná'),
-        (5, 'Velmi obtížná'),
+    USE_CHOICES = [
+        ("HYMNS", "Chvalozpěvy"),
+        ("EUCHARIST", "Eucharistie"),
+        ("HOLY_SPIRIT", "Duch Svatý"),
+        ("VIRGIN_MARY", "Panna Maria"),
+        ("SAINTS", "Svatí"),
+        ("WEDDINGS", "Svatební obřady"),
+        ("FUNERAL", "Pohřebí obřady")
     ]
+
 
     title = models.CharField(max_length=200)
     composer = models.CharField(max_length=200)
     arranger = models.CharField(max_length=200, blank=True, null=True)
-    genre = models.CharField(choices=GENRE_CHOICES, blank=True, null=True)
-
-
-    # Stored as a single-character code for simplicity. Template uses
-    # get_difficulty_level_display to show human label.
-    difficulty_level = models.CharField(choices=DIFFICULTY_CHOICES, blank=True, null=True, max_length=1)
+    cast = models.CharField(choices=CAST_CHOICES, blank=True, null=True)
+    season = models.CharField(choices=SEASON_CHOICES, blank=True, null=True)
+    use = models.CharField(choices=USE_CHOICES, blank=True, null=True)
     publication_year = models.IntegerField(blank=True, null=True)
     publisher = models.CharField(max_length=200, blank=True, null=True)
     isbn = models.CharField(max_length=20, blank=True, null=True)

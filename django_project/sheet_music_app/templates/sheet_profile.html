@@ -74,25 +74,33 @@
                 <h3 class="h5 mb-3">
                     <i class="bi bi-info-circle me-2 text-primary"></i>Informace o skladbě
                 </h3>
-                {# These use get_FOO_display for human labels where applicable #}
+
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-music-note-list me-2"></i><strong>Žánr</strong>
+                        <i class="bi bi-calendar3 me-2"></i><strong>Liturgické období</strong>
                     </div>
                     <div class="meta-value">
-                        {{ sheet.get_genre_display|default:"Neuvedeno" }}
+                        {{ sheet.get_season_display|default:"Neuvedeno" }}
                     </div>
                 </div>
-                
+
                 <div class="meta-item">
                     <div class="meta-label">
-                        <i class="bi bi-speedometer2 me-2"></i><strong>Obtížnost</strong>
+                        <i class="bi bi-calendar3 me-2"></i><strong>Liturgická příležitost</strong>
                     </div>
                     <div class="meta-value">
-                        {{ sheet.get_difficulty_level_display|default:"Neuvedeno" }}
+                        {{ sheet.get_use_display|default:"Neuvedeno" }}
                     </div>
                 </div>
-                
+
+                <div class="meta-item">
+                    <div class="meta-label">
+                        <i class="bi bi-speedometer2 me-2"></i><strong>Obsazení</strong>
+                    </div>
+                    <div class="meta-value">
+                        {{ sheet.get_cast_display|default:"Neuvedeno" }}
+                    </div>
+                </div>                
                 {% if sheet.publication_year %}
                 <div class="meta-item">
                     <div class="meta-label">
@@ -189,8 +197,7 @@
                         <i class="bi bi-info-circle me-2"></i>O skladbě
                     </h5>
                     <p class="card-text text-muted small">
-                        Tento notový zápis je součástí naší databáze. Pokud naleznete jakékoli nesrovnalosti nebo máte 
-                        připomínky, neváhejte nás kontaktovat.
+                        Určeno k nekomerčnímu použití. Jakýkoliv jiný způsob šíření pouze s předchozím písemným souhlasem vlastníka autorských práv.
                     </p>
                 </div>
             </div>
