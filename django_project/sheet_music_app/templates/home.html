@@ -49,7 +49,7 @@
                         <!-- Preserve search query when applying filters -->
                         <input type="hidden" name="q" value="{{ query }}" />
                         <div class="mb-3">
-                            <label for="cast" class="form-label">Sborové obsazení</label>
+                            <label for="cast" class="form-label"><strong>Sborové obsazení</strong></label>
                             <select name="cast" id="cast" class="form-select">
                                 <option value="all" {% if selected_cast == 'all' %}selected{% endif %}>Všechna obsazení</option>
                                 {% for code, name in cast_choices %}
@@ -59,7 +59,7 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="season" class="form-label">Liturgické období</label>
+                            <label for="season" class="form-label"><strong>Liturgické období</strong></label>
                             <select name="season" id="season" class="form-select">
                                 <option value="all" {% if selected_season == 'all' %}selected{% endif %}>Všechna období</option>
                                 {% for code, name in season_choices %}
@@ -69,7 +69,7 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="use" class="form-label">Příležitost</label>
+                            <label for="use" class="form-label"><strong>Příležitost</strong></label>
                             <select name="use" id="use" class="form-select">
                                 <option value="all" {% if selected_use == 'all' %}selected{% endif %}>Všechny příležitosti</option>
                                 {% for code, name in use_choices %}
@@ -79,7 +79,7 @@
                         </div>
                         
                         <div class="mb-4">
-                            <label for="year" class="form-label">Rok vydání</label>
+                            <label for="year" class="form-label"><strong>Rok vydání</strong></label>
                             <select name="year" id="year" class="form-select">
                                 <option value="all" {% if selected_year == 'all' %}selected{% endif %}>Všechny roky</option>
                                 {% for y in years %}
@@ -139,25 +139,28 @@
                                 </div>
                                 
                                 <ul class="list-group list-group-flush mb-3">
+                                    
+                                      {% if sheet.season %}
+                                    <li class="list-group-item px-0">
+                                        <i class="bi bi-calendar3"></i>
+                                        <strong>Období:</strong> {{ sheet.get_season_display }}
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if sheet.use %}
+                                    <li class="list-group-item px-0">
+                                        <i class="bi bi-music-note-list"></i>
+                                        <strong>Příležitost:</strong> {{ sheet.get_use_display }}
+                                    </li>
+                                    {% endif %}
+                                    
                                     {% if sheet.cast %}
                                     <li class="list-group-item px-0">
                                         <i class="bi bi-people"></i>
                                         <strong>Obsazení:</strong> {{ sheet.get_cast_display }}
                                     </li>
                                     {% endif %}
-                                    {% if sheet.season %}
-                                    <li class="list-group-item px-0">
-                                        <i class="bi bi-calendar3"></i>
-                                        <strong>Období:</strong> {{ sheet.get_season_display }}
-                                    </li>
-                                    {% endif %}
-            
-                                    {% if sheet.publication_year %}
-                                    <li class="list-group-item px-0">
-                                        <i class="bi bi-calendar"></i>
-                                        <strong>Rok:</strong> {{ sheet.publication_year }}
-                                    </li>
-                                    {% endif %}
+                                  
                                 </ul>
 
                                 {% if user|is_editor or user|is_superuser or user|in_group:"Internal" and sheet.tags.all %}

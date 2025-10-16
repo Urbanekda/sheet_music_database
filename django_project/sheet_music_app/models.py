@@ -23,16 +23,16 @@ class Sheet(models.Model):
     """
 
     CAST_CHOICES = [
-        ("SATB", "satb"),
-        ("SSATB", "ssatb"),
-        ("SSAA", "ssaa"),
-        ("SSAB", "ssab"),
-        ("SSA", "ssa"),
-        ("SAT", "sat"),
-        ("SAB", "sab")
+        ("SATB", "SATB"),
+        ("SSATB", "SSATB"),
+        ("SSAA", "SSAA"),
+        ("SSAB", "SSAB"),
+        ("SSA", "SSA"),
+        ("SAT", "SAT"),
+        ("SAB", "SAB"),
+        ("UNISON", "Unisono"),
+        ("OTHER", "Jiné")
     ]
-
-    
 
     SEASON_CHOICES = [
         ("ADVENT", "Advent"),
@@ -42,6 +42,7 @@ class Sheet(models.Model):
         ("PENTECOST", "Letnice"),
         ("HOLY_TRINITY", "Nejsvětější Trojice"),
         ("INTERLUDE", "Mezidobí"),
+        ("OTHER", "Žádné")
     ]
 
     USE_CHOICES = [
@@ -51,7 +52,10 @@ class Sheet(models.Model):
         ("VIRGIN_MARY", "Panna Maria"),
         ("SAINTS", "Svatí"),
         ("WEDDINGS", "Svatební obřady"),
-        ("FUNERAL", "Pohřebí obřady")
+        ("FUNERAL", "Pohřebí obřady"),
+        ("FOLK", "Lidové písně"),
+        ("MINE", "Hornické písně"),
+        ("OTHER", "Ostatní")
     ]
 
 

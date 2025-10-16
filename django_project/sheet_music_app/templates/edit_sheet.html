@@ -4,20 +4,20 @@
 {% load permissions %}
 {% block title %}Upravit noty | Sheet Music DB{% endblock %}
 {% block content %}
-    <div class="container justify-content-center flex w-50 w-md-75 w-sm-100">
+    <div class="container-lg justify-content-center flex w-50 w-md-75 w-sm-100">
         <h1>Upravit noty</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
             {% csrf_token %}
             <div class="title_input">
-                <label for="title" class="form-label">Název skladby</label>
+                <label for="title" class="form-label"><strong>Název skladby</strong></label>
                 <input type="text" name="title" id="title" class="form-control" required value="{{ sheet.title }}">
             </div>
             <div class="composer_input">
-                <label for="composer" class="form-label">Skladatel</label>
+                <label for="composer" class="form-label"><strong>Skladatel</strong></label>
                 <input type="text" name="composer" id="composer" class="form-control" required value="{{ sheet.composer }}">
             </div>
             <div class="cast_input">
-                <label for="cast" class="form-label">Obsazení</label>
+                <label for="cast" class="form-label"><strong>Obsazení</strong></label>
                 <select class="form-select" id="cast" name="cast" required>
                     <option value="" selected disabled>Vyberte obsazení...</option>
                     {% for cast_code, cast_name in cast_choices %}
@@ -26,7 +26,7 @@
                 </select>
             </div>
             <div class="season_input">
-                <label for="season" class="form-label">Liturgické období</label>
+                <label for="season" class="form-label"><strong>Období</strong></label>
                 <select class="form-select" id="season" name="season" required>
                     <option value="" selected disabled>Vyberte liturgické období...</option>
                     {% for season_code, season_name in season_choices %}
@@ -35,7 +35,7 @@
                 </select>
             </div>
             <div class="use_input">
-                <label for="use" class="form-label">Liturgická příležitost</label>
+                <label for="use" class="form-label"><strong>Liturgická příležitost</strong></label>
                 <select class="form-select" id="use" name="use" required>
                     <option value="" selected disabled>Vyberte liturgickou příležitost...</option>
                     {% for use_code, use_name in use_choices %}
@@ -44,42 +44,42 @@
                 </select>
             </div>
             <div class="publication_year_input">
-                <label for="publication_year" class="form-label">Rok vydání</label>
+                <label for="publication_year" class="form-label"><strong>Rok vydání</strong></label>
                 <input type="number" name="publication_year" id="publication_year" class="form-control" value="{{ sheet.publication_year }}">
             </div>
             <div class="publisher_input">
-                <label for="publisher" class="form-label">Vydavatel</label>
+                <label for="publisher" class="form-label"><strong>Vydavatel</strong></label>
                 <input type="text" name="publisher" id="publisher" class="form-control" value="{{ sheet.publisher }}">
             </div> 
             <div class="isbn_input">
-                <label for="isbn" class="form-label">ISBN</label>
+                <label for="isbn" class="form-label"><strong>ISBN</strong> <i class="bi bi-barcode"></i></label>
                 <input type="text" name="isbn" id="isbn" class="form-control" value="{{ sheet.isbn }}">
             </div>
             <div class="description_input">
-                <label for="description" class="form-label">Popis</label>
+                <label for="description" class="form-label"><i class="bi bi-info-circle"></i> <strong>Popis</strong></label>
                 <textarea name="description" id="description" class="form-control">{{ sheet.description }}</textarea>
             </div>
             <div class="tags_input">
-                <label for="tags" class="form-label">Tagy</label>
+                <label for="tags" class="form-label"><i class="bi bi-tag"></i> <strong>Tagy</strong></label>
                 <input type="text" name="tags" id="tags" class="form-control" value="{{ tags_csv }}" placeholder="oddělené čárkou, např. church, svatba, advent">
                 <div class="form-text">Přidejte krátké štítky pro snadnější vyhledávání. Oddělujte čárkou.</div>
             </div>
             <div class="public_input">
-                <label for="public" class="form-label">Veřejné?</label>
+                <label for="public" class="form-label"><i class="bi bi-eye"></i> <strong>Veřejné?</strong></label>
                 <input type="checkbox" name="public" id="public" class="form-check" {% if sheet.public %}checked{% endif %}>
             </div>
             <div class="preview_image_input">
-                <label for="preview_image" class="form-label">Náhledový obrázek</label>
+                <label for="preview_image" class="form-label"><i class="bi bi-image"></i> <strong>Náhledový obrázek</strong></label>
                 <input type="file" name="preview_image" id="preview_image" class="form-control">
                 {% if sheet.preview_image %}
-                <p>Aktuální obrázek: <a href="{{ sheet.preview_image.url }}" target="_blank">{{ sheet.preview_image.name }}</a></p>
+                <p class="mt-2">Aktuální obrázek: <a href="{{ sheet.preview_image.url }}" target="_blank">{{ sheet.preview_image.name }}</a></p>
                 {% endif %}
             </div>
             <div class="sheet_file_input">
-                <label for="sheet_file" class="form-label">Soubor s notami</label>
+                <label for="sheet_file" class="form-label"><i class="bi bi-music-note-list"></i> <strong>Soubor s notami</strong></label>
                 <input type="file" name="sheet_file" id="sheet_file" class="form-control">
                 {% if sheet.sheet_file %}
-                <p>Aktuální soubor: <a href="{{ sheet.sheet_file.url }}" target="_blank">{{ sheet.sheet_file.name }}</a></p>
+                <p class="mt-2">Aktuální soubor: <a href="{{ sheet.sheet_file.url }}" target="_blank">{{ sheet.sheet_file.name }}</a></p>
                 {% endif %}
             </div>
             <button type="submit" class="submit-button btn btn-primary">Uložit změny</button>
