@@ -140,17 +140,18 @@
                                 
                                 <ul class="list-group list-group-flush mb-3">
                                     
-                                      {% if sheet.season %}
-                                    <li class="list-group-item px-0">
-                                        <i class="bi bi-calendar3"></i>
-                                        <strong>Období:</strong> {{ sheet.get_season_display }}
-                                    </li>
-                                    {% endif %}
-                                    
-                                    {% if sheet.use %}
+                                   
+                                      {% if sheet.use %}
                                     <li class="list-group-item px-0">
                                         <i class="bi bi-music-note-list"></i>
                                         <strong>Příležitost:</strong> {{ sheet.get_use_display }}
+                                    </li>
+                                    {% endif %}
+                                   
+                                    {% if sheet.season %}
+                                    <li class="list-group-item px-0">
+                                        <i class="bi bi-calendar3"></i>
+                                        <strong>Období:</strong> {{ sheet.get_season_display }}
                                     </li>
                                     {% endif %}
                                     

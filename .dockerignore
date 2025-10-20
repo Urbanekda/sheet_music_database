@@ -1,0 +1,11 @@
+.env
+*.env
+.git
+.gitignore
+README.md
+*.pyc
+__pycache__/
+venv/
+postgres_data/
+django_project/staticfiles/
+django_project/mediafiles/

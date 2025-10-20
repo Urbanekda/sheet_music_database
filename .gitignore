@@ -1,0 +1,5 @@
+.env
+venv
+postgres_data
+static
+media
