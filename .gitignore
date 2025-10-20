@@ -3,3 +3,4 @@ venv
 postgres_data
 static
 media
+django_project/staticfiles
