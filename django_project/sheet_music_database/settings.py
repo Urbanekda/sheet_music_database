@@ -14,8 +14,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "http://bohuslavkorejs.cz", "https://bohuslavkorejs.cz"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8001", "https://localhost:8001", "http://127.0.0.1:8001", "https://127.0.0.1:8001", "http://[::1]:8001", "https://[::1]:8001", "http://bohuslavkorejs.cz", "https://bohuslavkorejs.cz", "http//168.119.231.102", "https://168.119.231.102"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "http://bohuslavkorejs.cz", "https://bohuslavkorejs.cz", "http://168.119.231.102", "https://168.119.231.102"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8001", "https://localhost:8001", "http://127.0.0.1:8001", "https://127.0.0.1:8001", "http://[::1]:8001", "https://[::1]:8001", "http://bohuslavkorejs.cz", "https://bohuslavkorejs.cz", "http://168.119.231.102", "https://168.119.231.102"]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
