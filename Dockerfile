@@ -27,7 +27,6 @@ COPY django_project /app
 EXPOSE 8000
 
 RUN chmod +x /app/entrypoint.sh
-RUN chmod +x /scripts/renew.sh
 
 CMD ["/app/entrypoint.sh"]
 

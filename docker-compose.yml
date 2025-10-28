@@ -50,7 +50,9 @@ services:
             web: 
                 condition: service_started
     certbot:
-        image: certbot/certbot
+        build:
+            context: .
+            dockerfile: Dockerfile.certbot
         container_name: certbot
         volumes:
             - ./certbot/conf:/etc/letsencrypt

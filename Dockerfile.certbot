@@ -1,0 +1,20 @@
+FROM certbot/certbot
+
+# Install cron and bash
+RUN apk add --no-cache bash
+
+# Create necessary directories
+RUN mkdir -p /etc/crontabs /var/log
+
+# Create the renewal script directory
+RUN mkdir -p /scripts
+
+# Copy the renewal script
+COPY certbot/scripts/renew.sh /scripts/renew.sh
+RUN chmod +x /scripts/renew.sh
+
+# Set up the cron job
+RUN echo "0 3 * * * /scripts/renew.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+
+# Start cron in the foreground
+CMD ["crond", "-f", "-d", "8"]
