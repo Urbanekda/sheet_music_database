@@ -25,6 +25,8 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,7 +70,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sheet_music_database.wsgi.application'
 
+
+
+# Email cofiguration - smtp2go service provider
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
 
 
 # Database

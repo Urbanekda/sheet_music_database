@@ -58,9 +58,6 @@ services:
             - ./certbot/conf:/etc/letsencrypt
             - ./certbot/www:/var/www/certbot
             - ./certbot/scripts:/scripts
-        command: >
-            sh -c "echo '0 3 * * * /scripts/renew.sh >> /var/log/cron.log 2>&1' > /etc/crontabs/root &&
-            crond -f -d 8"
         depends_on:
             - frontend-proxy
         restart: unless-stopped
@@ -68,3 +65,4 @@ volumes:
     postgres_data: 
     media:
     staticfiles:
+    certbot:

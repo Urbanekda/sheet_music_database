@@ -17,4 +17,6 @@ RUN chmod +x /scripts/renew.sh
 RUN echo "0 3 * * * /scripts/renew.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
 
 # Start cron in the foreground
-CMD ["crond", "-f", "-d", "8"]
+ENTRYPOINT ["crond"]
+
+CMD ["-f", "-d", "8"]
