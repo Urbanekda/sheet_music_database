@@ -2,6 +2,7 @@ asgiref==3.9.1
 certifi==2025.10.5
 charset-normalizer==3.4.4
 Django==4.2.25
+django-allauth==65.12.1
 django-appconf==1.1.0
 django-browser-reload==1.20.0
 django-compressor==4.5.1

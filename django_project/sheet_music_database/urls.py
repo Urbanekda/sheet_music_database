@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("sheet_music_app.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
+    path("accounts/", include("allauth.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

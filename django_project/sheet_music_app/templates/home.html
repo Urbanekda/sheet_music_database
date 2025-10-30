@@ -138,7 +138,7 @@
                                     {% endif %}
                                 </div>
                                 
-                                <ul class="list-group list-group-flush mb-3">
+                                <ul class="list-group list-group-flush mb-1">
                                     
                                    
                                       {% if sheet.use %}
@@ -165,7 +165,7 @@
                                 </ul>
 
                                 {% if user|is_editor or user|is_superuser or user|in_group:"Internal" and sheet.tags.all %}
-                                <div class="mb-3">
+                                <div class="tag-container mb-1">
                                     {% for tag in sheet.tags.all|slice:":3" %}
                                         <span class="badge bg-secondary me-1">{{ tag.name }}</span>
                                     {% endfor %}

@@ -242,6 +242,7 @@ def edit_sheet(request, pk):
         "cast_choices": Sheet.CAST_CHOICES,
         "season_choices": Sheet.SEASON_CHOICES,
         "use_choices": Sheet.USE_CHOICES,
+        "tags_csv": ", ".join(sheet.tags.values_list('name', flat=True)),
     })
 
 @login_required(login_url='login')

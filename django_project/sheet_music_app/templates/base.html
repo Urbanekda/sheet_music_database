@@ -125,13 +125,20 @@
     <footer class="bg-secondary py-3 mt-auto">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 text-center text-white text-md-start">
+                <div class="col text-center text-white text-md-start">
                     <p class="mb-2 text-white fs-5">Kontaktujte nás</p>
                     <p class="mb-1"><i class="bi bi-envelope me-1"></i> support@bohuslavkorejs.cz</p>
-                    <p class="mb-1"><a href="https://tynskyduch.webnode.cz/" class="text-white"><i class="bi bi-globe me-1"></i>tynskykduch.cz</a></p>
-                    <p class="mb-0"><a href="https://www.facebook.com/tynskyduch/" class="text-white"><i class="bi bi-facebook me-1"></i>Tynskyduch</a></p>
+                    <p class="mb-1"><a href="https://www.facebook.com/tynskyduch/" class="text-white"><i class="bi bi-facebook me-1"></i>Tynskyduch</a></p>
+                    <p class="mb-0"><a href="https://bohuslavkorejs.cz/" class="text-white"><i class="bi bi-globe me-1"></i>bohuslavkorejs.cz</a></p>
+
                 </div>
-                <div class="col-md-6 d-flex flex-column align-items-center align-items-md-end mt-2 mt-md-0 text-white">
+                <div class="col text-center text-white text-md-start">
+                    <p class="mb-2 text-white fs-5">Užitečné odkazy</p>
+                    <p class="mb-1"><a href="https://tynskyduch.webnode.cz/" class="text-white"><i class="bi bi-globe me-1"></i>tynskykduch.cz</a></p>
+                    <p class="mb-1"><a href="{% url 'terms_and_conditions' %}" class="text-white"><i class="bi bi-file-text me-1"></i>Podmínky použití</a></p>
+                    <p class="mb-1"><a href="{% url 'privacy_policy' %}" class="text-white"><i class="bi bi-lock me-1"></i>Ochrana osobních údajů</a></p>
+                </div>
+                <div class="col d-flex flex-column align-items-center align-items-md-end mt-2 mt-md-0 text-white">
                     <div class="d-flex align-items-center gap-3 mt-4">
                         <div class="text-end">
                             <p class="mb-0">&copy; {% now "Y" %} Schola Týnského Chrámu</p>
