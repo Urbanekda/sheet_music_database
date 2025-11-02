@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Vítejte v naší databázi not</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+
+<div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 24px; border: 1px solid #eaeaea;">
+    
+    <h2 style="color: #2c3e50;">Vítejte, {{ user.username }}! 🎶</h2>
+
+    <p>
+        Děkujeme, že jste se zaregistrovali do naší online databáze not. Jsme moc rádi, že jste součástí naší komunity hudebníků.
+    </p>
+    
+    <p>
+        S naším portálem můžete:
+    </p>
+
+    <ul>
+        <li>📥 Stahovat notové materiály</li>
+        <li>📤 Nahrávat vlastní noty a sdílet je s ostatními</li>
+        <li>📝 Upravit a spravovat své uložené materiály</li>
+        <li>🎼 Objevovat nové skladby a aranžmá</li>
+    </ul>
+
+    <p>
+        Doufáme, že Vám naše platforma dobře poslouží a přinese inspiraci i radost do Vaší hudební praxe.
+    </p>
+
+    <h3 style="color: #2c3e50; margin-top: 30px;">Podpora projektu 💛</h3>
+
+    <p>
+        Naše databáze vzniká z nadšení pro hudbu a je provozována dobrovolně.  
+        Pokud se Vám projekt líbí a chtěli byste jej podpořit, budeme nesmírně vděční za dobrovolný příspěvek:
+    </p>
+
+    <p>
+        <strong>Bankovní účet:</strong> 51909870227/0100
+        <br>
+        Níže najdete QR kód pro snadnou platbu:
+    </p>
+
+    <p style="text-align: center; padding: 16px;">
+        <img src="{% static 'images/qr_platba.png' %}" alt="QR k platbě" style="max-width: 200px;">
+    </p>
+
+    <p>
+        Děkujeme, že pomáháte udržet hudbu živou a dostupnou!
+    </p>
+
+    <p>
+        S úctou a přáním krásných hudebních chvil,<br>
+        <strong>Schola Týnského chrámu</strong>
+    </p>
+
+</div>
+</body>
+</html>

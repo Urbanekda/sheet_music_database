@@ -85,10 +85,25 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Registration successful. You can now log in.')
+            messages.success(request, 'Registrace úspěšná. Můžete se přihlásit.')
+
+            user = form.save()
+            subject = render_to_string("templates/emails/email_confirmation_subject.txt").strip()
+            text_content = render_to_string("templates/emails/email_confirmation_message.txt", {"user": user})
+            html_content = render_to_string("templates/emails/email_confirmation_message.html", {"user": user})
+
+            email = EmailMultiAlternatives(
+                subject,
+                text_content,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+            )
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
             return redirect('login')
         else:
-            messages.error(request, 'Registration failed. Please correct the errors below.')
+            messages.error(request, 'Registrace selhala. Prosím opravte chyby v níže uvedeném formuláři.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})

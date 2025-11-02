@@ -1,0 +1,29 @@
+Vítejte, {{ user.username }}! 🎶
+
+Děkujeme, že jste se zaregistrovali do naší online databáze not.
+Jsme moc rádi, že jste se připojili k naší komunitě hudebníků.
+
+S naší platformou můžete:
+- Stahovat notové materiály
+- Nahrávat vlastní noty a sdílet je s ostatními
+- Upravit a spravovat své uložené materiály
+- Objevovat nové skladby a aranžmá
+
+Doufáme, že Vám náš web přinese inspiraci a radost při práci s hudbou.
+
+---
+
+PODPORA PROJEKTU 💛
+
+Naše databáze funguje dobrovolně a z nadšení pro hudbu.
+Pokud chcete projekt podpořit, budeme velmi vděční za jakýkoli příspěvek.
+
+Číslo účtu pro dobrovolný dar:
+51909870227/0100
+
+QR kód pro platbu je přiložen v e-mailu.
+
+Děkujeme, že pomáháte udržet hudbu živou a dostupnou!
+
+S pozdravem,
+Schola Týnského chrámu
