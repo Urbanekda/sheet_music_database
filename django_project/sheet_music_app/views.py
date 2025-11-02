@@ -18,6 +18,9 @@ from django.contrib.auth import logout
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
 
 
 # Homepage view, registered users only
@@ -88,9 +91,9 @@ def register(request):
             messages.success(request, 'Registrace úspěšná. Můžete se přihlásit.')
 
             user = form.save()
-            subject = render_to_string("templates/emails/email_confirmation_subject.txt").strip()
-            text_content = render_to_string("templates/emails/email_confirmation_message.txt", {"user": user})
-            html_content = render_to_string("templates/emails/email_confirmation_message.html", {"user": user})
+            subject = render_to_string("emails/email_confirmation_subject.txt").strip()
+            text_content = render_to_string("emails/email_confirmation_message.txt", {"user": user})
+            html_content = render_to_string("emails/email_confirmation_message.html", {"user": user})
 
             email = EmailMultiAlternatives(
                 subject,
