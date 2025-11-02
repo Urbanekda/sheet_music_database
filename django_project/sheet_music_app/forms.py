@@ -5,7 +5,14 @@ from django import forms
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
     last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
-    email = forms.EmailField(max_length=254, help_text='Vyžadováno. Zadejte platnou emailovou adresu.')
+    email = forms.EmailField(max_length=254, required=True, help_text='Vyžadováno. Zadejte platnou emailovou adresu.')
+
+    # Custom validation to ensure email is unique
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Emailová adresa je již používána.")
+        return email
 
     class Meta:
         model = User
