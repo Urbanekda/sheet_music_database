@@ -1,5 +1,6 @@
 .env
 venv
 postgres_data
+postgres_backup
 media
 django_project/staticfiles
