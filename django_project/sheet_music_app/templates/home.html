@@ -134,14 +134,13 @@
                                     {% if sheet.preview_image %}
                                         <img src="{{ sheet.preview_image.url }}" alt="Náhled {{ sheet.title }}" class="">
                                     {% else %}
-                                        <img src="{% static 'images/placeholder.jpg' %}" alt="Žádný náhled" class="">
+                                        <img src="{% static 'images/placeholder.png' %}" alt="Žádný náhled" class="">
                                     {% endif %}
                                 </div>
                                 
                                 <ul class="list-group list-group-flush mb-1">
-                                    
-                                   
-                                      {% if sheet.use %}
+
+                                    {% if sheet.use %}
                                     <li class="list-group-item px-0">
                                         <i class="bi bi-music-note-list"></i>
                                         <strong>Příležitost:</strong> {{ sheet.get_use_display }}
