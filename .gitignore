@@ -3,4 +3,6 @@ venv
 postgres_data
 postgres_backup
 media
+certbot/conf
+certbot/www
 django_project/staticfiles
