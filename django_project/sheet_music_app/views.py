@@ -65,6 +65,12 @@ def home(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Build base_query preserving current GET filters but removing page
+    base_query = request.GET.copy()
+    if 'page' in base_query:
+        base_query.pop('page')
+    base_query = base_query.urlencode()
+
     return render(request, "home.html", {
         "sheets": page_obj,
         "cast_choices": Sheet.CAST_CHOICES,
@@ -80,6 +86,7 @@ def home(request):
         "page_obj": page_obj,
         "paginator": paginator,
         "is_paginated": page_obj.has_other_pages(),
+        "base_query": base_query, 
     })
 
 # User registration view

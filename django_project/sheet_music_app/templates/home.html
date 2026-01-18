@@ -189,8 +189,7 @@
                 <nav aria-label="Stránkování" class="mt-4">
                     <ul class="pagination justify-content-center">
                         {# Build base query without page #}
-                        {% with base_query="q="|add:query|urlencode|add:"&cast="|add:selected_cast|urlencode|add:"&season="|add:selected_season|urlencode|add:"&use="|add:selected_use|urlencode|add:"&year="|add:selected_year|urlencode %}
-
+                        {# use server-side base_query (already urlencoded, no 'page') #} 
                         <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
                             <a class="page-link text-secondary" href="?{{ base_query }}{% if page_obj.has_previous %}&page={{ page_obj.previous_page_number }}{% endif %}" tabindex="-1" aria-disabled="{% if not page_obj.has_previous %}true{% else %}false{% endif %}">Předchozí</a>
                         </li>
@@ -204,8 +203,6 @@
                         <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
                             <a class="page-link text-secondary" href="?{{ base_query }}{% if page_obj.has_next %}&page={{ page_obj.next_page_number }}{% endif %}">Další</a>
                         </li>
-
-                        {% endwith %}
                     </ul>
                 </nav>
                 {% endif %}
