@@ -19,7 +19,7 @@ urlpatterns = [
     path("noty/id/<int:pk>", views.sheet_profile_redirect_by_pk, name="sheet_profile_by_pk"),
     path("noty/<int:pk>", views.sheet_profile_redirect_by_pk),
     # Auth views
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html', next_page="home"), name='login'),
+    path('login/', views.TurnstileLoginView.as_view(template_name='registration/login.html', next_page="home"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', views.register, name='register'),
     # Password reset flow (Django's built-in views with custom templates)

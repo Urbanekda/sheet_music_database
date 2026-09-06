@@ -13,8 +13,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Sheet, Tag
-from .forms import CustomUserCreationForm, PasswordResetForm
+from .forms import CustomUserCreationForm, PasswordResetForm, TurnstileAuthenticationForm
 from django.contrib.auth import logout
+from django.contrib.auth import views as auth_views
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -88,6 +89,11 @@ def home(request):
         "is_paginated": page_obj.has_other_pages(),
         "base_query": base_query, 
     })
+
+class TurnstileLoginView(auth_views.LoginView):
+    """Standard Django LoginView with the Turnstile-verifying form swapped in."""
+    form_class = TurnstileAuthenticationForm
+
 
 # User registration view
 def register(request):

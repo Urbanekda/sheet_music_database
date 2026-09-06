@@ -1,8 +1,35 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.conf import settings
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 
-class CustomUserCreationForm(UserCreationForm):
+from .turnstile import verify_turnstile_token
+
+
+class TurnstileFormMixin:
+    """Verifies the Cloudflare Turnstile challenge as part of form validation.
+
+    Expects the widget's response token in the POST field "cf-turnstile-response"
+    (the name the Turnstile JS API submits by default). Skipped when DEBUG is on,
+    since local/test environments have no Turnstile keys configured.
+    """
+    turnstile_error_message = "Ověření zabezpečení se nezdařilo. Zkuste to prosím znovu."
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if settings.DEBUG:
+            return cleaned_data
+        token = self.data.get("cf-turnstile-response")
+        if not verify_turnstile_token(token):
+            raise forms.ValidationError(self.turnstile_error_message)
+        return cleaned_data
+
+
+class TurnstileAuthenticationForm(TurnstileFormMixin, AuthenticationForm):
+    pass
+
+
+class CustomUserCreationForm(TurnstileFormMixin, UserCreationForm):
     first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
     last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
     email = forms.EmailField(max_length=254, required=True, help_text='Vyžadováno. Zadejte platnou emailovou adresu.')
