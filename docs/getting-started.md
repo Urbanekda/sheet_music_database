@@ -24,7 +24,12 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
-2. Create local `.env` or export required env vars (see [configuration.md](configuration.md)).
+2. Create a `.env.local` file in the repo root with at least:
+```env
+DEBUG=True
+SECRET_KEY=any-value-for-local-dev
+```
+With `DEBUG=True`, `settings.py` automatically switches to SQLite (`db.sqlite3`, no Postgres/Docker needed), prints emails to the console instead of sending via SMTP, and disables the production-only HTTPS/proxy enforcement (`SECURE_SSL_REDIRECT`, secure cookies, HSTS) that otherwise blocks plain `runserver`. `.env.local` is loaded automatically and is gitignored — see [configuration.md](configuration.md) for the full list of variables and how `.env.local`/`.env` interact.
 
 3. Initialize database and create superuser:
 ```bash

@@ -17,7 +17,11 @@
                     {% if form.errors %}
                         <div class="alert alert-danger" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            Nesprávné uživatelské jméno nebo heslo. Zkuste to prosím znovu.
+                            {% if form.non_field_errors %}
+                                {{ form.non_field_errors|join:" " }}
+                            {% else %}
+                                Nesprávné uživatelské jméno nebo heslo. Zkuste to prosím znovu.
+                            {% endif %}
                         </div>
                     {% endif %}
 
@@ -70,6 +74,15 @@
                             </div>
                         </div>
 
+                        {% if TURNSTILE_SITE_KEY %}
+                        <div class="mb-4 d-flex justify-content-center">
+                            <div class="cf-turnstile"
+                                data-sitekey="{{ TURNSTILE_SITE_KEY }}"
+                                data-theme="light"
+	                            data-size="normal"></div>
+                        </div>
+                        {% endif %}
+
                         <div class="gap-2 d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary w-50">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Přihlásit se
@@ -117,6 +130,9 @@
 {% endblock %}
 
 {% block extra_js %}
+{% if TURNSTILE_SITE_KEY %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
 <script>
     // Toggle password visibility
     document.querySelectorAll('.toggle-password').forEach(button => {

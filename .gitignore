@@ -1,4 +1,5 @@
 .env
+.env.local
 venv
 postgres_data
 postgres_backup
@@ -6,5 +7,24 @@ media
 certbot/conf
 certbot/www
 django_project/staticfiles
-certbot/conf
-certbot/www
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+
+# OS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
