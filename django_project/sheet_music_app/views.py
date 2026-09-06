@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Sheet, Tag
+from .models import Sheet, Tag, generate_pdf_preview
 from .forms import CustomUserCreationForm, PasswordResetForm, TurnstileAuthenticationForm
 from django.contrib.auth import logout
 from django.contrib.auth import views as auth_views
@@ -39,6 +39,7 @@ def home(request):
     use = request.GET.get('use')
     year = request.GET.get('year')
     q = request.GET.get('q', '').strip()  # simple search query across several fields
+    sort = request.GET.get('sort')
 
     if cast and cast != 'all':
         sheets = sheets.filter(cast=cast)
@@ -61,8 +62,20 @@ def home(request):
             | Q(tags__name__icontains=q)
         ).distinct()
 
+    # Ordering (passed via GET). Whitelist of allowed sort keys to guard against
+    # arbitrary field ordering being injected via the query string.
+    sort_options = {
+        'title': 'title',
+        'date_created_desc': '-date_created',
+        'date_created_asc': 'date_created',
+        'year_desc': '-publication_year',
+        'year_asc': 'publication_year',
+    }
+    if sort not in sort_options:
+        sort = 'title'
+
     # Prefetch tags to avoid N+1 when rendering badges; paginate 6 per page
-    paginator = Paginator(sheets.prefetch_related('tags').order_by('title'), 6)
+    paginator = Paginator(sheets.prefetch_related('tags').order_by(sort_options[sort]), 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -82,6 +95,7 @@ def home(request):
         "selected_season": season or 'all',
         "selected_use": use or 'all',
         "selected_year": year or 'all',
+        "selected_sort": sort,
         "is_superuser": request.user.is_superuser,
         "query": q,
         "page_obj": page_obj,
@@ -164,7 +178,13 @@ def add_sheet(request):
                 new_sheet.isbn = None
             if not new_sheet.description:
                 new_sheet.description = None
-            
+
+            # If no preview was uploaded, try generating one from the PDF's first page
+            if not new_sheet.preview_image:
+                preview = generate_pdf_preview(new_sheet.sheet_file)
+                if preview:
+                    new_sheet.preview_image = preview
+
             # Persist to DB (model.save() also handles auto-slugging if needed)
             new_sheet.save()
 
@@ -233,10 +253,17 @@ def edit_sheet(request, pk):
             sheet.modified_by = request.user
             sheet.public = "public" in request.POST
 
+            new_preview_uploaded = "preview_image" in request.FILES and request.FILES["preview_image"]
+
             if "sheet_file" in request.FILES and request.FILES["sheet_file"]:
                 sheet.sheet_file = request.FILES["sheet_file"]
+                # Regenerate the auto preview from the new file unless the user supplied their own
+                if not new_preview_uploaded:
+                    preview = generate_pdf_preview(sheet.sheet_file)
+                    if preview:
+                        sheet.preview_image = preview
 
-            if "preview_image" in request.FILES and request.FILES["preview_image"]:
+            if new_preview_uploaded:
                 sheet.preview_image = request.FILES["preview_image"]
 
             sheet.save()
