@@ -1,5 +1,25 @@
+import os
+import fitz
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils.text import slugify
+
+
+def generate_pdf_preview(sheet_file):
+    """Render the first page of a PDF sheet_file to a PNG for use as preview_image.
+
+    Returns a ContentFile, or None if sheet_file isn't a PDF.
+    """
+    if not sheet_file.name.lower().endswith(".pdf"):
+        return None
+    sheet_file.seek(0)
+    doc = fitz.open(stream=sheet_file.read(), filetype="pdf")
+    sheet_file.seek(0)
+    pixmap = doc.load_page(0).get_pixmap(dpi=150)
+    doc.close()
+    name = f"{os.path.splitext(os.path.basename(sheet_file.name))[0]}_preview.png"
+    return ContentFile(pixmap.tobytes("png"), name=name)
+
 
 class Tag(models.Model):
     """Simple tag entity for labeling sheets."""

@@ -20,6 +20,7 @@
                         <input type="hidden" name="season" value="{{ selected_season }}" />
                         <input type="hidden" name="use" value="{{ selected_use }}" />
                         <input type="hidden" name="year" value="{{ selected_year }}" />
+                        <input type="hidden" name="sort" value="{{ selected_sort }}" />
 
                         <div class="input-group">
                             <span class="input-group-text" id="search-addon"><i class="bi bi-search"></i></span>
@@ -87,7 +88,18 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        
+
+                        <div class="mb-4">
+                            <label for="sort" class="form-label"><strong>Seřadit dle</strong></label>
+                            <select name="sort" id="sort" class="form-select">
+                                <option value="title" {% if selected_sort == 'title' %}selected{% endif %}>Názvu (A-Z)</option>
+                                <option value="date_created_desc" {% if selected_sort == 'date_created_desc' %}selected{% endif %}>Data přidání (od nejnovějších)</option>
+                                <option value="date_created_asc" {% if selected_sort == 'date_created_asc' %}selected{% endif %}>Data přidání (od nejstarších)</option>
+                                <option value="year_desc" {% if selected_sort == 'year_desc' %}selected{% endif %}>Roku vydání (od nejnovějších)</option>
+                                <option value="year_asc" {% if selected_sort == 'year_asc' %}selected{% endif %}>Roku vydání (od nejstarších)</option>
+                            </select>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="me-2"></i>Filtrovat
                         </button>
